@@ -2,10 +2,10 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
@@ -23,10 +23,11 @@ $show_no_image = $module_config[$module_name]['show_no_image'];
 if( isset( $array_op[1] ) )
 {
 	$alias = trim( $array_op[1] );
-	$stmt = $db->prepare( 'SELECT city_id,title,alias FROM ' . $tablelocation . '_city WHERE alias= :alias' );
+	$stmt = $db->prepare( 'SELECT provinceid ,title,alias FROM ' . $tablelocation . '_province WHERE alias= :alias' );
 	$stmt->bindParam( ':alias', $alias, PDO::PARAM_STR );
 	$stmt->execute();
 	list( $cityid, $page_title, $alias ) = $stmt->fetch( 3 );
+	print_r($cityid);
 	if( $cityid > 0 )
 	{
 		$base_url_rewrite = $base_url = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $module_info['alias']['location'] . '/' . $alias;

@@ -2,10 +2,10 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_ADMIN' ) or ! defined( 'NV_MAINFILE' ) ) die( 'Stop!!!' );
@@ -271,4 +271,5 @@ $lang_module['district'] = 'Quận/Huyện';
 $lang_module['city'] = 'Tỉnh/Thành';
 $lang_module['choose_district'] = 'Chọn Quận/Huyện';
 $lang_module['choose_ward'] = 'Chọn Phường/Xã';
+$lang_module['country'] = 'Quản lý địa điểm';
 

@@ -2,10 +2,10 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
@@ -397,7 +397,7 @@ while( list( $id, $fid_i, $listfid, $post_id, $author, $title, $alias, $status, 
 
 	$data[$id] = array(
 		'id' => $id,
-		'link' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$fid_i]['alias'] . '/' . $alias . '-' . $id . $global_config['rewrite_exturl'],
+		'link' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$fid_i]['alias'] . '/' . $alias . $global_config['rewrite_exturl'],
 		'title' => $title,
 		'publtime' => $publtime,
 		'status' => $lang_module['status_' . $status],

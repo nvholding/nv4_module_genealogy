@@ -2,12 +2,11 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
-
 
 if( ! function_exists('nv_genealogy_array_fam_admin') )
 {
@@ -74,19 +73,20 @@ else
 	}
 }
 
-$allow_func = array( 'main', 'view', 'stop', 'publtime', 'waiting', 'declined', 're-published', 'genealogy', 'rpc', 'del_genealogy', 'alias', 'tagsajax', 'province' , 'ward' );
+$allow_func = array( 'main', 'view', 'stop', 'publtime', 'waiting', 'declined', 're-published', 'genealogy', 'rpc', 'del_genealogy', 'alias', 'tagsajax', 'country', 'province' , 'district', 'ward' );
 
 if( ! isset( $site_mods['cms'] ) )
 {
-	$submenu['genealogy'] = $lang_module['genealogy_add'];
+	$submenu['genealogy'] = $nv_Lang->getModule('genealogy_add');
+	$submenu['country'] = $nv_Lang->getModule('country');
 }
 
 if( $NV_IS_ADMIN_MODULE )
 {
-	$submenu['family'] = $lang_module['family'];
-	$submenu['tags'] = $lang_module['tags'];
-	$submenu['admins'] = $lang_module['admin'];
-	$submenu['setting'] = $lang_module['setting'];
+	$submenu['family'] = $nv_Lang->getModule('family');
+	$submenu['tags'] = $nv_Lang->getModule('tags');
+	$submenu['admins'] = $nv_Lang->getModule('admin');
+	$submenu['setting'] = $nv_Lang->getModule('setting');
 
 	$allow_func[] = 'family';
 	$allow_func[] = 'change_fam';

@@ -2,10 +2,10 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
@@ -82,7 +82,7 @@ if( $fid > 0 )
 			$content = 'OK_' . $parentid;
 		}
 	}
-	nv_del_moduleCache( $module_name );
+	$nv_Cache->delMod( $module_name );
 }
 
 include NV_ROOTDIR . '/includes/header.php';

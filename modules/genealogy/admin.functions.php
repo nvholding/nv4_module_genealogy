@@ -2,15 +2,15 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_ADMIN' ) or ! defined( 'NV_MAINFILE' ) or ! defined( 'NV_IS_MODADMIN' ) ) die( 'Stop!!!' );
 
-$tablelocation = NV_PREFIXLANG . '_location';
+$tablelocation = NV_PREFIXLANG . '_' . $module_data;
 $result = $db->query( 'SHOW TABLE STATUS LIKE ' . $db->quote( $tablelocation . '_%' ) );
 $checklocation=0;
 while( $item = $result->fetch( ) )
@@ -24,8 +24,8 @@ while( $item = $result->fetch( ) )
 
 if ($checklocation > 0) {
 	define( 'NV_MODULE_LOCATION', true );
-	$sql = 'SELECT city_id, title, type FROM ' . $tablelocation. '_city WHERE status=1 ORDER BY weight ASC';
-	$global_array_location_city = nv_db_cache( $sql, 'city_id', 'location' );
+	$sql = 'SELECT provinceid, title, type FROM ' . $tablelocation. '_province WHERE status=1 ORDER BY weight ASC';
+	$global_array_location_city = $nv_Cache->db( $sql, 'city_id', 'location' );
 	
 }
 
@@ -63,6 +63,7 @@ $array_allowed_comm = array(
 
 define( 'NV_IS_FILE_ADMIN', true );
 require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+require_once NV_ROOTDIR . '/modules/' . $module_file . '/location.class.php';
 
 global $global_array_fam;
 $global_array_fam = array();

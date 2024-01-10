@@ -2,34 +2,34 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
 
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+/* if( ! defined( 'NV_MODULE_LOCATION' ) ){
+	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_location'] . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
 	die();
 	
 	
-}
+} */
 
 $contents = '';
 $publtime = 0;
-$alias_made_up=change_alias($lang_module['made_up']);
-$alias_convention=change_alias($lang_module['convention']);
-$alias_collapse=change_alias($lang_module['collapse']);
-$alias_anniversary=change_alias($lang_module['anniversary']);
-$alias_family_tree=change_alias($lang_module['family_tree']);
-$array_relationships = array(1 => $lang_module['u_relationships_1'], 2 => $lang_module['u_relationships_2'], 3 => $lang_module['u_relationships_3']);
-$array_gender = array(0 => $lang_module['u_gender_0'], 1 => $lang_module['u_gender_1'], 2 => $lang_module['u_gender_2']);
-$array_status = array(0 => $lang_module['u_status_0'], 1 => $lang_module['u_status_1'], 2 => $lang_module['u_status_2']);
+$alias_made_up=change_alias($nv_Lang->getModule('made_up'));
+$alias_convention=change_alias($nv_Lang->getModule('convention'));
+$alias_collapse=change_alias($nv_Lang->getModule('collapse'));
+$alias_anniversary=change_alias($nv_Lang->getModule('anniversary'));
+$alias_family_tree=change_alias($nv_Lang->getModule('family_tree'));
+$array_relationships = array(1 => $nv_Lang->getModule('u_relationships_1'), 2 => $nv_Lang->getModule('u_relationships_2'), 3 => $nv_Lang->getModule('u_relationships_3'));
+$array_gender = array(0 => $nv_Lang->getModule('u_gender_0'), 1 => $nv_Lang->getModule('u_gender_1'), 2 => $nv_Lang->getModule('u_gender_2'));
+$array_status = array(0 => $nv_Lang->getModule('u_status_0'), 1 => $nv_Lang->getModule('u_status_1'), 2 => $nv_Lang->getModule('u_status_2'));
 
 if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 {
@@ -138,7 +138,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 							 edittime=" . NV_CURRENTTIME . "
 						WHERE id =" . $news_contents['id'];
 						$db->exec( $sql );
-						nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['genealogy_edit'], $post['title'], $user_post );
+						nv_insert_logs( NV_LANG_DATA, $module_name, $nv_Lang->getModule('genealogy_edit'), $post['title'], $user_post );
 						
 						
 						$sql =  'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $news_contents['id'] / 2000 ) . ' SET
@@ -308,7 +308,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 
 				if( defined( 'NV_IS_MODADMIN' ) and $news_contents['status'] != 1 )
 				{
-					$alert = sprintf( $lang_module['status_alert'], $lang_module['status_' . $news_contents['status']] );
+					$alert = sprintf( $nv_Lang->getModule('status_alert'), $nv_Lang->getModule('status_' . $news_contents['status']) );
 					$my_footer .= "<script type=\"text/javascript\">alert('". $alert ."')</script>";
 					$news_contents['allowed_send'] = 0;
 				}
@@ -323,8 +323,42 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 					$lu=$listu;
 					$lu['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $lu['alias'] . $global_config['rewrite_exturl'], true );
 					$list_users[$listu['parentid']][$listu['id']] = $lu;
+					
 							
 				}
+				foreach($list_users as $lprid => $tlus){
+					foreach ($tlus as $luid => $tlu){
+						if($tlu['relationships'] == 2){
+							$tparentid = $db->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND id = ' . $lprid )->fetch();
+							$tpr = $tparentid['parentid'];
+						
+						}else{
+							$tpr = $lprid;
+						}
+						$Treejsons[]=array(
+							"id"=>$tlu['id'],
+							"name"=>$tlu['full_name'],
+							"title"=>$tlu['name1'],
+							"birthday"=>$tlu['birthday'],
+							"image_list"=>$tlu['image'],
+							"orders"=>$tlu['weight'],
+							"parent_id"=>$tpr ,
+							"married_with"=>($tlu['relationships'] == 2 )? $lprid : "",
+							"home_address"=>$tlu['burial'],
+							"gender"=>$tlu['gender'],
+							"child_of_second_married"=>($tlu['parentid2'] > 0 )? $tlu['parentid2'] : "",
+							"_image_list"=>"",
+							"phone_number"=>"",
+							"email_address"=>"",
+							"date_of_death"=>"",
+							"place_heaven"=>"",
+							"col_fix"=>$tlu['id'],
+							"has_child"=>1,
+							"_public_link"=>"\/my-tree?pid=js156958"
+						); 
+					}
+				}
+				$Treejsons=json_encode($Treejsons);
 			}
 		}
 		elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_family_tree AND $count_op == 4 AND $array_op[3]!='' )
@@ -353,7 +387,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 					$result = $db->query($query);
 					if (int(count($result))!=0)
 					{
-						$array_parentid[0]['caption'] = $lang_module['list_parentid_0'];
+						$array_parentid[0]['caption'] = $nv_Lang->getModule('list_parentid_0');
 						while ($row = $result->fetch())
 						{
 							$row['link'] = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . '/' . $alias_family_tree . '/' . $row['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
@@ -379,7 +413,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 				if (int(count($result))!=0)
 				{
 					
-					$array_parentid[1]['caption'] = $lang_module['list_parentid_1'];
+					$array_parentid[1]['caption'] = $nv_Lang->getModule('list_parentid_1');
 					while ($row = $result->fetch())
 					{
 						$row['link'] =  nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . '/' . $alias_family_tree . '/' . $row['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
@@ -404,7 +438,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 					$result = $db->query($query);
 					if (int(count($result))!=0)
 					{
-						$array_parentid[2]['caption'] = $lang_module['list_parentid_2'];
+						$array_parentid[2]['caption'] = $nv_Lang->getModule('list_parentid_2');
 						while ($row = $result->fetch())
 						{
 							$row['link'] =  nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . '/' . $alias_family_tree . '/' . $row['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
@@ -493,7 +527,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 					foreach ($array_in_parentid[2] as $key => $value)
 					{
 						$i++;
-						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $lang_module['u_relationships_2'] . ')</span>', 'link' => $value['link']);
+						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_2') . ')</span>', 'link' => $value['link']);
 					}
 					foreach ($array_in_parentid[1] as $key => $value)
 					{
@@ -507,7 +541,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 					foreach ($array_in_parentid[3] as $key => $value)
 					{
 						$i++;
-						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $lang_module['u_relationships_3'] . ')</span>', 'link' => $value['link']);
+						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_3') . ')</span>', 'link' => $value['link']);
 					}
 					foreach ($array_in_parentid[1] as $key => $value)
 					{
@@ -604,15 +638,15 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 			{
 				$news_contents['disablerating'] = 0;
 			}
-			$news_contents['stringrating'] = sprintf( $lang_module['stringrating'], $news_contents['total_rating'], $news_contents['click_rating'] );
+			$news_contents['stringrating'] = sprintf( $nv_Lang->getModule('stringrating'), $news_contents['total_rating'], $news_contents['click_rating'] );
 			$news_contents['numberrating'] = ( $news_contents['click_rating'] > 0 ) ? round( $news_contents['total_rating'] / $news_contents['click_rating'], 1 ) : 0;
 			$news_contents['langstar'] = array(
-				'note' => $lang_module['star_note'],
-				'verypoor' => $lang_module['star_verypoor'],
-				'poor' => $lang_module['star_poor'],
-				'ok' => $lang_module['star_ok'],
-				'good' => $lang_module['star_good}'],
-				'verygood' => $lang_module['star_verygood']
+				'note' => $nv_Lang->getModule('star_note'),
+				'verypoor' => $nv_Lang->getModule('star_verypoor'),
+				'poor' => $nv_Lang->getModule('star_poor'),
+				'ok' => $nv_Lang->getModule('star_ok'),
+				'good' => $nv_Lang->getModule('star_good}'),
+				'verygood' => $nv_Lang->getModule('star_verygood')
 			);
 		}
 
@@ -669,17 +703,17 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 		if( $news_contents['id'] > 0 AND ($array_op[2] == "Manager") )
 		{
 			$array_mod_title[] = array(
-					'title' => $lang_module['manager'],
+					'title' => $nv_Lang->getModule('manager'),
 					'link' => $base_url_rewrite
 				);
-			$contents = manager_theme( $news_contents, $list_users, $array_keyword, $content_comment );
+			$contents = manager_theme( $news_contents, $list_users, $array_keyword, $content_comment, $Treejsons );
 			
 		}
 		elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_family_tree AND $count_op == 4 AND $array_op[3]!='' )
 		{
 				$link_alias_family_tree=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . $global_config['rewrite_exturl'], true );
 				$array_mod_title[] = array(
-					'title' => $lang_module['family_tree'],
+					'title' => $nv_Lang->getModule('family_tree'),
 					'link' => $link_alias_family_tree
 				);
 				$contents = nv_theme_genealogy_detail( $news_contents, $info_users, $array_parentid, $OrgChart );	
@@ -687,7 +721,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 		elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_family_tree )
 		{
 				$array_mod_title[] = array(
-					'title' => $lang_module['family_tree'],
+					'title' => $nv_Lang->getModule('family_tree'),
 					'link' => $base_url_rewrite
 				);
 				$contents = view_family( $news_contents, $list_users, $array_keyword, $content_comment );	

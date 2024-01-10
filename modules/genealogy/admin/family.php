@@ -2,10 +2,10 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
@@ -194,7 +194,7 @@ if( !empty( $savefam ) )
 				$db->query( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content) VALUES (' . $admin_id . ', ' . $newfid . ', 1, 1, 1, 1, 1)' );
 			}
 
-			nv_del_moduleCache( $module_name );
+			$nv_Cache->delMod( $module_name );
 			nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['add_fam'], $title, $admin_info['userid'] );
 			Header( 'Location: ' . NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '&parentid=' . $parentid );
 			die();
@@ -234,7 +234,7 @@ if( !empty( $savefam ) )
 				nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['edit_fam'], $title, $admin_info['userid'] );
 			}
 
-			nv_del_moduleCache( $module_name );
+			$nv_Cache->delMod( $module_name );
 			Header( 'Location: ' . NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '&parentid=' . $parentid );
 			die();
 		}

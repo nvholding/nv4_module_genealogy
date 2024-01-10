@@ -3,13 +3,13 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 if( ! defined( 'NV_SYSTEM' ) ) die( 'Stop!!!' );
-$tablelocation = NV_PREFIXLANG . '_location';
+$tablelocation = NV_PREFIXLANG . '_' . $module_data;
 $result = $db->query( 'SHOW TABLE STATUS LIKE ' . $db->quote( $tablelocation . '_%' ) );
 $checklocation=0;
 while( $item = $result->fetch( ) )
@@ -21,17 +21,17 @@ if ($checklocation > 0) {
 	
 	define( 'NV_MODULE_LOCATION', true );
 	
-	$sql = 'SELECT city_id, title, alias, type FROM ' . $tablelocation . '_city WHERE status=1 ORDER BY weight ASC';
+	$sql = 'SELECT provinceid, title, alias, type FROM ' . $tablelocation . '_province WHERE status=1 ORDER BY weight ASC';
 	
-	$global_array_location_city = nv_db_cache( $sql, 'city_id', 'location' );
+	$global_array_location_city = $nv_Cache->db( $sql, 'provinceid', 'genealogy' );
 	
-	$sql = 'SELECT district_id, city_id, title, alias, type FROM ' . $tablelocation . '_district WHERE status=1 ORDER BY weight ASC';
+	$sql = 'SELECT districtid, provinceid, title, alias, type FROM ' . $tablelocation . '_district WHERE status=1 ORDER BY weight ASC';
 	
-	$global_array_location_district = nv_db_cache( $sql, 'district_id', 'location' );
+	$global_array_location_district = $nv_Cache->db( $sql, 'districtid', 'genealogy' );
 	
-	$sql = 'SELECT ward_id, district_id, city_id, title, alias, type FROM ' . $tablelocation . '_ward WHERE status=1 ORDER BY weight ASC';
+	$sql = 'SELECT wardid, districtid, title, alias, type FROM ' . $tablelocation . '_ward WHERE status=1 ORDER BY weight ASC';
 	
-	$global_array_location_ward = nv_db_cache( $sql, 'ward_id', 'location' );
+	$global_array_location_ward = $nv_Cache->db( $sql, 'wardid', 'genealogy' );
 }
 
 if( ! in_array( $op, array( 'viewfam', 'detail' ) ) )
@@ -65,7 +65,7 @@ $alias_fam_url = isset( $array_op[0] ) ? $array_op[0] : '';
 $array_mod_title = array();
 
 $sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_family ORDER BY sort ASC';
-$list = nv_db_cache( $sql, 'fid', $module_name );
+$list = $nv_Cache->db( $sql, 'fid', $module_name );
 foreach( $list as $l )
 {
 	$global_array_fam[$l['fid']] = $l;
@@ -179,7 +179,7 @@ if( ! empty( $array_op ) and $op == 'main' )
 
 
 $sql = "SELECT fid, title, alias FROM " . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY weight ASC";
-$array_family = nv_db_cache( $sql, 'fid', $module_name );
+$array_family = $nv_Cache->db( $sql, 'fid', $module_name );
 
 
 
@@ -542,4 +542,4 @@ function nv_giapha_export_pdf( $contents, $background, $row_genealogy )
 
 
 $sql = "SELECT fid, title, alias FROM " . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY weight ASC";
-$array_family = nv_db_cache( $sql, 'fid', $module_name );
+$array_family = $nv_Cache->db( $sql, 'fid', $module_name );

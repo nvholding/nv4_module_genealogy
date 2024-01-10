@@ -2,10 +2,10 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_MAINFILE' ) ) die( 'Stop!!!' );
@@ -80,8 +80,8 @@ function nv_set_status_module()
 	$sth->bindValue( ':config_value', intval( $timecheckstatus ), PDO::PARAM_STR );
 	$sth->execute();
 
-	nv_del_moduleCache( 'settings' );
-	nv_del_moduleCache( $module_name );
+	$nv_Cache->delMod( 'settings' );
+	$nv_Cache->delMod( $module_name );
 
 	unlink( $check_run_cronjobs );
 	clearstatcache();
@@ -95,7 +95,7 @@ function nv_set_status_module()
  */
 function nv_del_content_module( $id )
 {
-	global $db, $module_name, $module_data, $title, $lang_module;
+	global $db, $module_name, $module_data, $title, $lang_module, $nv_Lang;
 	$content_del = 'NO_' . $id;
 	$title = '';
 	list( $id, $listfid, $title, $homeimgfile ) = $db->query( 'SELECT id, listfid, title, homeimgfile FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . intval( $id ) )->fetch( 3 );
@@ -145,7 +145,7 @@ function nv_del_content_module( $id )
 		}
 		else
 		{
-			$content_del = 'ERR_' . $lang_module['error_del_content'];
+			$content_del = 'ERR_' . $nv_Lang->getModule('error_del_content');
 		}
 	}
 	return $content_del;
@@ -181,8 +181,8 @@ function nv_archive_content_module( $id, $listfid )
  */
 function nv_link_edit_page( $id )
 {
-	global $lang_global, $lang_module, $module_name;
-	$link = "<a  href=\"" . NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=manager&amp;id=" . $id . "\"><em class=\"fa fa-edit margin-right\"></em> " . $lang_module['manager'] . "</a>";
+	global $lang_global, $lang_module, $module_name, $nv_Lang;
+	$link = "<a  href=\"" . NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=manager&amp;id=" . $id . "\"><em class=\"fa fa-edit margin-right\"></em> " . $nv_Lang->getModule('manager') . "</a>";
 	return $link;
 }
 
@@ -194,8 +194,8 @@ function nv_link_edit_page( $id )
  */
 function nv_link_delete_page( $id, $detail = 0)
 {
-	global $lang_global, $module_name;
-	$link = "<a class=\"btn btn-danger btn-xs\" href=\"javascript:void(0);\" onclick=\"nv_del_genealogy(" . $id . ", '" . md5( $id . session_id() ) . "','" . NV_BASE_ADMINURL . "', " . $detail . ")\"><em class=\"fa fa-trash-o margin-right\"></em> " . $lang_global['delete'] . "</a>";
+	global $lang_global, $module_name, $nv_Lang;
+	$link = "<a class=\"btn btn-danger btn-xs\" href=\"javascript:void(0);\" onclick=\"nv_del_genealogy(" . $id . ", '" . md5( $id . session_id() ) . "','" . NV_BASE_ADMINURL . "', " . $detail . ")\"><em class=\"fa fa-trash-o margin-right\"></em> " . $nv_Lang->getModule('delete') . "</a>";
 	return $link;
 }
 

@@ -2,10 +2,10 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
@@ -1078,25 +1078,6 @@ if( empty( $rowcontent['alias'] ) )
 $xtpl->assign( 'UPLOADS_DIR_USER', $uploads_dir_user );
 $xtpl->assign( 'UPLOAD_CURRENT', $currentpath );
 
-$sql = 'SELECT * FROM ' . $db_config['prefix'] . '_googleplus ORDER BY weight ASC';
-$_array = $db->query( $sql )->fetchAll();
-if( sizeof( $_array ) )
-{
-	$array_googleplus = array();
-	$array_googleplus[] = array( 'gid' => -1, 'title' => $lang_module['googleplus_1'] );
-	$array_googleplus[] = array( 'gid' => 0, 'title' => $lang_module['googleplus_0'] );
-	foreach( $_array as $row )
-	{
-		$array_googleplus[] = $row;
-	}
-	foreach( $array_googleplus as $grow )
-	{
-		$grow['selected'] = ( $rowcontent['gid'] == $grow['gid'] ) ? ' selected="selected"' : '';
-		$xtpl->assign( 'GOOGLEPLUS', $grow );
-		$xtpl->parse( 'main.googleplus.gid' );
-	}
-	$xtpl->parse( 'main.googleplus' );
-}
 
 if( $module_config[$module_name]['auto_tags'] )
 {

@@ -2,10 +2,10 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
@@ -76,8 +76,8 @@ if( ! empty( $savesetting ) )
 		$sth->execute();
 	}
 
-	nv_del_moduleCache( 'settings' );
-	nv_del_moduleCache( $module_name );
+	$nv_Cache->delMod( 'settings' );
+	$nv_Cache->delMod( $module_name );
 	Header( 'Location: ' . NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '&rand=' . nv_genpass() );
 	die();
 }
@@ -241,8 +241,8 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) or ! in_array( 'admins', $allow_func ) 
 			}
 		}
 
-		nv_del_moduleCache( 'settings' );
-		nv_del_moduleCache( $module_name );
+		$nv_Cache->delMod( 'settings' );
+		$nv_Cache->delMod( $module_name );
 		Header( 'Location: ' . NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '&rand=' . nv_genpass() );
 		die();
 	}

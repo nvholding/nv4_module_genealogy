@@ -2,32 +2,36 @@
 
 /**
  * @Project NUKEVIET 4.x
- * @Author webvang (hoang.nguyen@webvang.vn)
- * @Copyright (C) 2015 Webvang. All rights reserved
+ * @Author NV Holding (ceo@nvholding.vn)
+ * @Copyright (C) 2020 NV Holding. All rights reserved
  * @License GNU/GPL version 2 or any later version
- * @Createdate 11/10/2015 00:00
+ * @Createdate 01/01/2020 00:00
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+/* if( ! defined( 'NV_MODULE_LOCATION' ) ){
+	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_location'] . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
+	echo nv_site_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
 	die();
 	
 	
-}
+} */
+
+
 $contents = '';
 $publtime = 0;
-$alias_made_up=change_alias($lang_module['made_up']);
-$alias_convention=change_alias($lang_module['convention']);
-$alias_collapse=change_alias($lang_module['collapse']);
-$alias_anniversary=change_alias($lang_module['anniversary']);
-$alias_family_tree=change_alias($lang_module['family_tree']);
-$array_relationships = array(1 => $lang_module['u_relationships_1'], 2 => $lang_module['u_relationships_2'], 3 => $lang_module['u_relationships_3']);
-$array_gender = array(0 => $lang_module['u_gender_0'], 1 => $lang_module['u_gender_1'], 2 => $lang_module['u_gender_2']);
-$array_status = array(0 => $lang_module['u_status_0'], 1 => $lang_module['u_status_1'], 2 => $lang_module['u_status_2']);
+$alias_made_up=change_alias($nv_Lang->getModule('made_up'));
+$alias_convention=change_alias($nv_Lang->getModule('convention'));
+$alias_collapse=change_alias($nv_Lang->getModule('collapse'));
+$alias_anniversary=change_alias($nv_Lang->getModule('anniversary'));
+$alias_family_tree=change_alias($nv_Lang->getModule('family_tree'));
+$array_relationships = array(1 => $nv_Lang->getModule('u_relationships_1'), 2 => $nv_Lang->getModule('u_relationships_2'), 3 => $nv_Lang->getModule('u_relationships_3'));
+$array_gender = array(0 => $nv_Lang->getModule('u_gender_0'), 1 => $nv_Lang->getModule('u_gender_1'), 2 => $nv_Lang->getModule('u_gender_2'));
+$array_status = array(0 => $nv_Lang->getModule('u_status_0'), 1 => $nv_Lang->getModule('u_status_1'), 2 => $nv_Lang->getModule('u_status_2'));
+
+
 if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 {
 
@@ -136,11 +140,12 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 				$meta_property['article:expiration_time'] = date( 'Y-m-dTH:i:s', $news_contents['exptime'] );
 			}
 			$meta_property['article:section'] = $global_array_fam[$news_contents['fid']]['title'];
+			
 		}
 
 		if( defined( 'NV_IS_MODADMIN' ) and $news_contents['status'] != 1 )
 		{
-			$alert = sprintf( $lang_module['status_alert'], $lang_module['status_' . $news_contents['status']] );
+			$alert = sprintf( $nv_Lang->getModule('status_alert'), $nv_Lang->getModule('status_' . $news_contents['status']) );
 			$my_footer .= "<script type=\"text/javascript\">alert('". $alert ."')</script>";
 			$news_contents['allowed_send'] = 0;
 		}
@@ -166,9 +171,9 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 		$publtime =1;
 		$base_url_rewrite = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $array_op[3] . $global_config['rewrite_exturl'], true );
 		$info_users = $db->sqlreset()->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND alias="' . $array_op[3] . '" ORDER BY weight ASC' )->fetch();
-
+		print_r('SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND alias="' . $array_op[3] . '" ORDER BY weight ASC');
 		
-		if(int(count($info_users['id']))!=0){
+		if(int(count($info_users))!=0){
 			
 			if ($info_users['image'] != "" and file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_name . "/" . $info_users['image']))
 			{
@@ -184,9 +189,9 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 			{
 				$query = "SELECT id, parentid, weight, relationships, gender, status, alias, full_name, birthday  FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $info_users['parentid'] . " AND id!=" . $info_users['id'] . " AND relationships NOT IN(2,3) ORDER BY weight ASC";
 				$result = $db->query($query);
-				if (int(count($result))!=0)
+				if (!empty($result))
 				{
-					$array_parentid[0]['caption'] = $lang_module['list_parentid_0'];
+					$array_parentid[0]['caption'] = $nv_Lang->getModule('list_parentid_0');
 					while ($row = $result->fetch())
 					{
 						$row['link'] = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . '/' . $alias_family_tree . '/' . $row['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
@@ -202,12 +207,12 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 						$row['status'] = $array_status[$row['status']];
 						if($row['weight']<$info_users['weight']){
 							if($row['gender']==1){
-								$row['mogul']=$lang_module['brother_1'];
+								$row['mogul']=$nv_Lang->getModule('brother_1');
 							}else{
-								$row['mogul']=$lang_module['brother_2'];
+								$row['mogul']=$nv_Lang->getModule('brother_2');
 							}
 						}else{
-							$row['mogul']=$lang_module['brother_3'];
+							$row['mogul']=$nv_Lang->getModule('brother_3');
 						}
 						$array_parentid[0]['items'][] = $row;
 					}
@@ -218,10 +223,10 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 			$query = "SELECT id, parentid, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND (parentid=" . $info_users['id']  . " OR parentid2 =" . $info_users['id']  . ") AND relationships=1 ORDER BY weight ASC";
 
 			$result = $db->query($query);
-			if (int(count($result))!=0)
+			if (!empty($result))
 			{
 				
-				$array_parentid[1]['caption'] = $lang_module['list_parentid_1'];
+				$array_parentid[1]['caption'] = $nv_Lang->getModule('list_parentid_1');
 				while ($row = $result->fetch())
 				{
 					$row['link'] =  nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . '/' . $alias_family_tree . '/' . $row['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
@@ -244,9 +249,9 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 			{
 				$query = "SELECT id, parentid, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $info_users['id'] . " AND relationships=2 ORDER BY weight ASC";
 				$result = $db->query($query);
-				if (int(count($result))!=0)
+				if (!empty($result))
 				{
-					$array_parentid[2]['caption'] = $lang_module['list_parentid_2'];
+					$array_parentid[2]['caption'] = $nv_Lang->getModule('list_parentid_2');
 					while ($row = $result->fetch())
 					{
 						$row['link'] =  nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . '/' . $alias_family_tree . '/' . $row['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
@@ -335,7 +340,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 				foreach ($array_in_parentid[2] as $key => $value)
 				{
 					$i++;
-					$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $lang_module['u_relationships_2'] . ')</span>', 'link' => $value['link']);
+					$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_2') . ')</span>', 'link' => $value['link']);
 				}
 				if (isset($array_in_parentid[1]))
 				{
@@ -356,7 +361,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 							foreach ($array_in_parentid_2[2] as $keys => $values)
 							{
 								$i++;
-								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid'], 'full_name' => $values['full_name'] . '<br>(' . $lang_module['u_relationships_2'] . ')', 'link' => $values['link']);
+								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid'], 'full_name' => $values['full_name'] . '<br>(' . $nv_Lang->getModule('u_relationships_2') . ')', 'link' => $values['link']);
 							}
 						}
 						if (isset($array_in_parentid_2[1]))
@@ -367,7 +372,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 								$i++;
 								$numg = $db->query("SELECT COUNT(*) as numg FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $values['id'] . " AND (gender = 1 OR gender = 3) ORDER BY relationships ASC, weight ASC")->fetch();
 								if($values['parentid2']==0){$values['parentid2']=$values['parentid'];}
-								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid2'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $lang_module['u_relationships_4'] . ': ' . int($numg['numg']). ')</span>', 'link' => $values['link']);
+								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid2'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_4') . ': ' . int($numg['numg']). ')</span>', 'link' => $values['link']);
 							}
 							
 						}
@@ -376,13 +381,13 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 							foreach ($array_in_parentid_2[3] as $keys => $values)
 							{
 								$i++;
-								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid'], 'full_name' => $values['full_name'] . '<br><span style="color:red;">(' . $lang_module['u_relationships_3'] . ')</span>', 'link' => $values['link']);
+								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid'], 'full_name' => $values['full_name'] . '<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_3') . ')</span>', 'link' => $values['link']);
 							}
 							if(isset($array_in_parentid_2[1])){
 								foreach ($array_in_parentid_2[1] as $keys => $values)
 								{
 									$i++;
-									$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid2'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $lang_module['u_relationships_1'] . ')</span>', 'link' => $values['link']);
+									$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid2'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_1') . ')</span>', 'link' => $values['link']);
 								}
 							}
 						}
@@ -406,7 +411,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 				foreach ($array_in_parentid[3] as $key => $value)
 				{
 					$i++;
-					$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $lang_module['u_relationships_3'] . ')</span>', 'link' => $value['link']);
+					$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_3') . ')</span>', 'link' => $value['link']);
 				}
 				foreach ($array_in_parentid[1] as $key => $value)
 				{
@@ -436,7 +441,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 						{
 							$i++;
 							$numg = $db->query("SELECT COUNT(*) as numg FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $values['id'] . " AND (gender = 1 OR gender = 3) ORDER BY relationships ASC, weight ASC")->fetch();
-							$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $value['id'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $lang_module['u_relationships_4'] . ': ' . int($numg['numg']) . ')</span>', 'link' => $values['link']);
+							$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $value['id'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_4') . ': ' . int($numg['numg']) . ')</span>', 'link' => $values['link']);
 							
 							
 						}
@@ -451,68 +456,230 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 		$base_url_rewrite = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . $global_config['rewrite_exturl'], true );
 		$list_users = array();
 		$sqllistuser = $db->sqlreset()->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" ORDER BY weight ASC' );
-
+		$Treejsons = array();
+		$itree=0;
 		while($listu = $sqllistuser->fetch())
 		{
+			$itree++;
 			$lu=array();
 			$lu=$listu;
 			$lu['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $lu['alias'] . $global_config['rewrite_exturl'], true );
 			$list_users[$listu['parentid']][$listu['id']] = $lu;
-					
+			
+			
+							
 		}
-		$list_genealogy=$db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $news_contents['id'])->fetch();
-		
-		$info_users = $db->sqlreset()->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND parentid=0 ORDER BY weight ASC' )->fetch();
-		$info_users['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $info_users['alias'] . $global_config['rewrite_exturl'], true );
-		//die('SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND parentid=0 ORDER BY weight ASC');
-		if(int(count($info_users['id']))!=0){
-			
-			
-			// Cay gia pha
-			$OrgChart = array();
-			$i = 0;
-			// Xác định cha của người này
-			if ($info_users['parentid'] > 0)
-			{
-				$info_parent = $db->query("SELECT full_name, alias FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $info_users['parentid'])->fetch();
-				$info_parent['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $info_parent['alias'] . $global_config['rewrite_exturl'], true );
-				$OrgChart[$i] = array('number' => $i, 'id' => $info_users['parentid'], 'parentid' => 0, 'full_name' => $info_parent['full_name'], 'link' =>  $info_parent['link']);
-
-				// Thông tin của người này
-				$i++;
-				$OrgChart[$i] = array('number' => $i, 'id' => $info_users['id'], 'parentid' => $info_users['parentid'], 'full_name' => $info_users['full_name'], 'link' => $info_users['link']);
-			}
-			else
-			{
-				// Thông tin của người này
-				$OrgChart[$i] = array('number' => $i, 'id' => $info_users['id'], 'parentid' => 0, 'full_name' => $info_users['full_name'], 'link' => $info_users['link']);
-			}
-
-			$array_in_parentid = array();
-			$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $info_users['id'] . " ORDER BY relationships ASC, weight ASC";
-			$result = $db->query($query);
-			while ($row = $result->fetch())
-			{
-				$row['link'] = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $row['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
-				$array_in_parentid[$row['relationships']][] = $row;
+		$i=0;
+		foreach($list_users as $lprid => $tlus){
+			foreach ($tlus as $luid => $tlu){
 				
-			}
-
-			// Xác định vợ của người này.
-			if (isset($array_in_parentid[2]))
-			{
-				foreach ($array_in_parentid[2] as $key => $value)
+				if($tlu['relationships'] == 2){
+					$tparentid = $db->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND id = ' . $lprid )->fetch();
+					$tpr = $tparentid['parentid'];
+				
+				}else{
+					$tpr = $lprid;
+				}
+				if ($tlu['image'] != "" and file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_name . "/" . $tlu['image']))
 				{
+					$tlu['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module_name . "/" . $tlu['image'];
+				}
+				else
+				{
+					$tlu['image'] = NV_BASE_SITEURL . 'themes/' . $module_info['template'] . '/images/' . $module_info['module_file'] . '/no-images.jpg';
+				}
+				
+				$Treejsons[]=array(
+					"id"=>$tlu['id'],
+					"name"=>$tlu['full_name'],
+					"title"=>$tlu['name1'],
+					"birthday"=>"",
+					"image_list"=>$tlu['image'],
+					"orders"=>$tlu['weight'],
+					"parent_id"=>$tpr ,
+					"married_with"=>($tlu['relationships'] == 2 )? $lprid : "",
+					"home_address"=>$tlu['burial'],
+					"gender"=>$tlu['gender'],
+					"child_of_second_married"=>($tlu['parentid2'] > 0 )? $tlu['parentid2'] : "",
+					"_image_list"=>$tlu['image'],
+					"phone_number"=>"",
+					"email_address"=>"",
+					"date_of_death"=>"",
+					"place_heaven"=>"",
+					"col_fix"=>"",
+					"has_child"=>0,
+					"_public_link"=>NV_MY_DOMAIN.$tlu['link']
+				); 
+				$i++;
+			}
+		}
+		$Treejsons=json_encode($Treejsons);
+		$list_genealogy=$db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $news_contents['id'])->fetch();
+		$OrgChart = array();
+		$info_users = $db->sqlreset()->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND parentid=0 ORDER BY weight ASC' )->fetch();
+		
+		//die('SELECT * FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND parentid=0 ORDER BY weight ASC');
+		
+		if(isset($info_users['id'])){
+			
+			if(int($info_users['id'])!=0){
+				$info_users['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $info_users['alias'] . $global_config['rewrite_exturl'], true );
+				
+				
+				// Cay gia pha
+				
+				$i = 0;
+				// Xác định cha của người này
+				if ($info_users['parentid'] > 0)
+				{
+					$info_parent = $db->query("SELECT full_name, alias FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $info_users['parentid'])->fetch();
+					$info_parent['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $info_parent['alias'] . $global_config['rewrite_exturl'], true );
+					$OrgChart[$i] = array('number' => $i, 'id' => $info_users['parentid'], 'parentid' => 0, 'full_name' => $info_parent['full_name'], 'link' =>  $info_parent['link']);
+
+					// Thông tin của người này
 					$i++;
-					$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $lang_module['u_relationships_2'] . ')</span>', 'link' => $value['link']);
+					$OrgChart[$i] = array('number' => $i, 'id' => $info_users['id'], 'parentid' => $info_users['parentid'], 'full_name' => $info_users['full_name'], 'link' => $info_users['link']);
+					
+				
+				}
+				else
+				{
+					// Thông tin của người này
+					$OrgChart[$i] = array('number' => $i, 'id' => $info_users['id'], 'parentid' => 0, 'full_name' => $info_users['full_name'], 'link' => $info_users['link']);
 					
 				}
-				if (isset($array_in_parentid[1]))
+
+				$array_in_parentid = array();
+				$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $info_users['id'] . " ORDER BY relationships ASC, weight ASC";
+				$result = $db->query($query);
+				while ($row = $result->fetch())
 				{
+					$row['link'] = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $row['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
+					$array_in_parentid[$row['relationships']][] = $row;
+					
+				}
+
+				// Xác định vợ của người này.
+				if (isset($array_in_parentid[2]))
+				{
+					foreach ($array_in_parentid[2] as $key => $value)
+					{
+						$i++;
+						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_2') . ')</span>', 'link' => $value['link']);
+						
+					}
+					if (isset($array_in_parentid[1]))
+					{
+						foreach ($array_in_parentid[1] as $key => $value)
+						{
+							$i++;
+							$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid2'], 'full_name' => $value['full_name'], 'link' => $value['link']);
+							
+							$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " ORDER BY relationships ASC, weight ASC";	
+							//die($query);
+							$result2 = $db->query($query);
+							while ($row2 = $result2->fetch())
+							{
+								$row2['link'] = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $row2['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
+								$array_in_parentid_2[$row2['relationships']][] = $row2;
+							}
+							if (isset($array_in_parentid_2[2]))
+							{
+								foreach ($array_in_parentid_2[2] as $keys => $values)
+								{
+									$i++;
+									$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid'], 'full_name' => $values['full_name'] . '<br>(' . $nv_Lang->getModule('u_relationships_2') . ')', 'link' => $values['link']);
+								
+								}
+							}
+							if (isset($array_in_parentid[1]))
+							{
+								foreach ($array_in_parentid_2[1] as $keys => $values)
+								{
+									$i++;
+									if($values['parentid2']==0){$values['parentid2']=$values['parentid'];}
+									$numg = $db->query("SELECT COUNT(*) as numg FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $values['id'] . " AND (gender = 1 OR gender = 3) ORDER BY relationships ASC, weight ASC")->fetch();
+									$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid2'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_4') . ': ' . int($numg['numg']) . ')</span>', 'link' => $values['link']);
+								
+								}
+							}
+							elseif (isset($array_in_parentid_2[3]))
+							{
+								foreach ($array_in_parentid_2[3] as $keys => $values)
+								{
+									$i++;
+									$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid'], 'full_name' => $values['full_name'] . '<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_3') . ')</span>', 'link' => $values['link']);
+								
+								}
+								foreach ($array_in_parentid_2[1] as $keys => $values)
+								{
+									$i++;
+									$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid2'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_1') . ')</span>', 'link' => $values['link']);
+								
+								}
+							}
+							elseif (isset($array_in_parentid_2[1]))
+							{
+								foreach ($array_in_parentid_2[1] as $keys => $values)
+								{
+									$i++;
+									$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['id'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_1') . ')</span>', 'link' => $values['link']);
+								
+								
+								}
+							}
+							
+						}
+					}
+					// Xác định các con
+				}
+				elseif (isset($array_in_parentid[3]))
+				{
+					foreach ($array_in_parentid[3] as $key => $value)
+					{
+						$i++;
+						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_3') . ')</span>', 'link' => $value['link']);
+						
+						$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " ORDER BY relationships ASC, weight ASC";
+						
+						$result2 = $db->query($query);
+						while ($row2 = $result2->fetch())
+						{
+							$array_in_parentid_2[$row2['relationships']][] = $row2;
+						}
+						foreach ($array_in_parentid_2[3] as $key => $value)
+						{
+							$i++;
+							$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br>(' . $nv_Lang->getModule('u_relationships_3') . ')', 'link' => $value['link']);
+						
+						}
+					}
 					foreach ($array_in_parentid[1] as $key => $value)
 					{
 						$i++;
 						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid2'], 'full_name' => $value['full_name'], 'link' => $value['link']);
+						$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " ORDER BY relationships ASC, weight ASC";
+						$result3 = $db->query($query);
+						while ($row3 = $result3->fetch())
+						{
+							$array_in_parentid_3[$row3['relationships']][] = $row3;
+						}
+						foreach ($array_in_parentid_3[1] as $key => $value)
+						{
+							$i++;
+							
+							$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br>(' . $nv_Lang->getModule('u_relationships_3') . ')', 'link' => $value['link']);
+						
+						}
+					}
+				}
+				elseif (isset($array_in_parentid[1]))
+				{
+					foreach ($array_in_parentid[1] as $key => $value)
+					{
+						$i++;
+						//$numg = $db->query("SELECT COUNT(*) as numg FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " AND (gender = 1 OR gender = 3) ORDER BY relationships ASC, weight ASC")->fetch();
+						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $info_users['id'], 'full_name' => $value['full_name'], 'link' => $value['link']);
 						$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " ORDER BY relationships ASC, weight ASC";	
 						//die($query);
 						$result2 = $db->query($query);
@@ -521,117 +688,29 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 							$row2['link'] = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $row2['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
 							$array_in_parentid_2[$row2['relationships']][] = $row2;
 						}
-						if (isset($array_in_parentid_2[2]))
-						{
-							foreach ($array_in_parentid_2[2] as $keys => $values)
-							{
-								$i++;
-								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid'], 'full_name' => $values['full_name'] . '<br>(' . $lang_module['u_relationships_2'] . ')', 'link' => $values['link']);
-							}
-						}
-						if (isset($array_in_parentid[1]))
+						if (isset($array_in_parentid_2[1]))
 						{
 							foreach ($array_in_parentid_2[1] as $keys => $values)
 							{
 								$i++;
-								if($values['parentid2']==0){$values['parentid2']=$values['parentid'];}
 								$numg = $db->query("SELECT COUNT(*) as numg FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $values['id'] . " AND (gender = 1 OR gender = 3) ORDER BY relationships ASC, weight ASC")->fetch();
-								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid2'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $lang_module['u_relationships_4'] . ': ' . int($numg['numg']) . ')</span>', 'link' => $values['link']);
+								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $value['id'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $nv_Lang->getModule('u_relationships_4') . ': ' . int($numg['numg']) . ')</span>', 'link' => $values['link']);
+							
 							}
 						}
-						elseif (isset($array_in_parentid_2[3]))
-						{
-							foreach ($array_in_parentid_2[3] as $keys => $values)
-							{
-								$i++;
-								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid'], 'full_name' => $values['full_name'] . '<br><span style="color:red;">(' . $lang_module['u_relationships_3'] . ')</span>', 'link' => $values['link']);
-							}
-							foreach ($array_in_parentid_2[1] as $keys => $values)
-							{
-								$i++;
-								$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $values['parentid2'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $lang_module['u_relationships_1'] . ')</span>', 'link' => $values['link']);
-							}
-						}
-						elseif (isset($array_in_parentid_2[1]))
-						{
-							foreach ($array_in_parentid_2[1] as $keys => $values)
-							{
-								$i++;
-								$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['id'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $lang_module['u_relationships_1'] . ')</span>', 'link' => $values['link']);
-							}
-						}
-						
 					}
 				}
-				// Xác định các con
-			}
-			elseif (isset($array_in_parentid[3]))
-			{
-				foreach ($array_in_parentid[3] as $key => $value)
-				{
-					$i++;
-					$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br><span style="color:red;">(' . $lang_module['u_relationships_3'] . ')</span>', 'link' => $value['link']);
-					$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " ORDER BY relationships ASC, weight ASC";
+				
 					
-					$result2 = $db->query($query);
-					while ($row2 = $result2->fetch())
-					{
-						$array_in_parentid_2[$row2['relationships']][] = $row2;
-					}
-					foreach ($array_in_parentid_2[3] as $key => $value)
-					{
-						$i++;
-						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br>(' . $lang_module['u_relationships_3'] . ')', 'link' => $value['link']);
-					}
-				}
-				foreach ($array_in_parentid[1] as $key => $value)
-				{
-					$i++;
-					$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid2'], 'full_name' => $value['full_name'], 'link' => $value['link']);
-					$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " ORDER BY relationships ASC, weight ASC";
-					$result3 = $db->query($query);
-					while ($row3 = $result3->fetch())
-					{
-						$array_in_parentid_3[$row3['relationships']][] = $row3;
-					}
-					foreach ($array_in_parentid_3[1] as $key => $value)
-					{
-						$i++;
-						
-						$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $value['parentid'], 'full_name' => $value['full_name'] . '<br>(' . $lang_module['u_relationships_3'] . ')', 'link' => $value['link']);
-					}
-				}
+							
+		
+		//print_r(nv_jsonOutput($Treejsons)); 
+					
+				// Cay gia pha
 			}
-			elseif (isset($array_in_parentid[1]))
-			{
-				foreach ($array_in_parentid[1] as $key => $value)
-				{
-					$i++;
-					//$numg = $db->query("SELECT COUNT(*) as numg FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " AND (gender = 1 OR gender = 3) ORDER BY relationships ASC, weight ASC")->fetch();
-					$OrgChart[$i] = array('number' => $i, 'id' => $value['id'], 'parentid' => $info_users['id'], 'full_name' => $value['full_name'], 'link' => $value['link']);
-					$query = "SELECT id, parentid, parentid2, weight, relationships, gender, status, alias, full_name, birthday FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $value['id'] . " ORDER BY relationships ASC, weight ASC";	
-					//die($query);
-					$result2 = $db->query($query);
-					while ($row2 = $result2->fetch())
-					{
-						$row2['link'] = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $row2['alias'] . $global_config['rewrite_exturl'], true );//$row_genealogy['link_main'] . '/' . $row['alias'];
-						$array_in_parentid_2[$row2['relationships']][] = $row2;
-					}
-					if (isset($array_in_parentid_2[1]))
-					{
-						foreach ($array_in_parentid_2[1] as $keys => $values)
-						{
-							$i++;
-							$numg = $db->query("SELECT COUNT(*) as numg FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $info_users['gid'] . " AND parentid=" . $values['id'] . " AND (gender = 1 OR gender = 3) ORDER BY relationships ASC, weight ASC")->fetch();
-							$OrgChart[$i] = array('number' => $i, 'id' => $values['id'], 'parentid' => $value['id'], 'full_name' => $values['full_name'].'<br><span style="color:red;">(' . $lang_module['u_relationships_4'] . ': ' . int($numg['numg']) . ')</span>', 'link' => $values['link']);
-						}
-					}
-				}
-			}
-			// Cay gia pha
 		}
-	//die("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $list_genealogy['admin_id']);
-	
+		//die("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $list_genealogy['admin_id']);
+		
 		if( defined( 'NV_IS_ADMIN' )){
 				define( 'NV_IS_GENEALOGY_MANAGER', true);
 		}elseif($user_info['userid'] == $list_genealogy['admin_id']){
@@ -641,7 +720,6 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 	}
 	
 	
-
 
 	if( $publtime == 0 )
 	{
@@ -688,15 +766,15 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 		{
 			$news_contents['disablerating'] = 0;
 		}
-		$news_contents['stringrating'] = sprintf( $lang_module['stringrating'], $news_contents['total_rating'], $news_contents['click_rating'] );
+		$news_contents['stringrating'] = sprintf( $nv_Lang->getModule('stringrating'), $news_contents['total_rating'], $news_contents['click_rating'] );
 		$news_contents['numberrating'] = ( $news_contents['click_rating'] > 0 ) ? round( $news_contents['total_rating'] / $news_contents['click_rating'], 1 ) : 0;
 		$news_contents['langstar'] = array(
-			'note' => $lang_module['star_note'],
-			'verypoor' => $lang_module['star_verypoor'],
-			'poor' => $lang_module['star_poor'],
-			'ok' => $lang_module['star_ok'],
-			'good' => $lang_module['star_good}'],
-			'verygood' => $lang_module['star_verygood']
+			'note' => $nv_Lang->getModule('star_note'),
+			'verypoor' => $nv_Lang->getModule('star_verypoor'),
+			'poor' => $nv_Lang->getModule('star_poor'),
+			'ok' => $nv_Lang->getModule('star_ok'),
+			'good' => $nv_Lang->getModule('star_good}'),
+			'verygood' => $nv_Lang->getModule('star_verygood')
 		);
 	}
 
@@ -757,28 +835,28 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 		
 	}elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_made_up){
 		$array_mod_title[] = array(
-				'title' => $lang_module['made_up'],
+				'title' => $nv_Lang->getModule('made_up'),
 				'link' => $base_url_rewrite
 			);
 		$contents = view_detail('made_up', $news_contents, $array_keyword, $content_comment );
 		
 	}elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_convention){
 		$array_mod_title[] = array(
-				'title' => $lang_module['convention'],
+				'title' => $nv_Lang->getModule('convention'),
 				'link' => $base_url_rewrite
 			);
 		$contents = view_detail('convention', $news_contents, $array_keyword, $content_comment );
 		
 	}elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_collapse){
 		$array_mod_title[] = array(
-				'title' => $lang_module['collapse'],
+				'title' => $nv_Lang->getModule('collapse'),
 				'link' => $base_url_rewrite
 			);
 		$contents = view_detail('collapse', $news_contents, $array_keyword, $content_comment );
 		
 	}elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_anniversary){
 		$array_mod_title[] = array(
-				'title' => $lang_module['anniversary'],
+				'title' => $nv_Lang->getModule('anniversary'),
 				'link' => $base_url_rewrite
 			);
 		$contents = view_detail('anniversary', $news_contents, $array_keyword, $content_comment );
@@ -786,16 +864,18 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 	}elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_family_tree AND $count_op == 4 AND $array_op[3]!='' ){
 			$link_alias_family_tree=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . $global_config['rewrite_exturl'], true );
 			$array_mod_title[] = array(
-				'title' => $lang_module['family_tree'],
+				'title' => $nv_Lang->getModule('family_tree'),
 				'link' => $link_alias_family_tree
 			);
+			
 			$contents = nv_theme_genealogy_detail( $news_contents, $info_users, $array_parentid, $OrgChart );	
 	}elseif($news_contents['id'] > 0 AND $array_op[2]==$alias_family_tree ){
 			$array_mod_title[] = array(
-				'title' => $lang_module['family_tree'],
+				'title' => $nv_Lang->getModule('family_tree'),
 				'link' => $base_url_rewrite
 			);
-			$contents = view_family( $news_contents, $info_users, $array_keyword, $content_comment, $OrgChart );	
+			
+			$contents = view_family( $news_contents, $info_users, $array_keyword, $content_comment, $OrgChart, $Treejsons );	
 	}
 	$id_profile_googleplus = $news_contents['gid'];
 	$page_title = $news_contents['title'];

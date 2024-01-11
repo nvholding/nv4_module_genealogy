@@ -520,7 +520,7 @@ function detail_theme( $news_contents, $array_keyword, $content_comment )
 
 function no_permission()
 {
-	global $module_info, $module_file, $lang_module;
+	global $module_info, $module_file, $lang_module,$nv_Lang;
 
 	$xtpl = new XTemplate( 'detail.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
 

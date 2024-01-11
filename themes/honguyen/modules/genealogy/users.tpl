@@ -1,14 +1,8 @@
 <!-- BEGIN: main -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Language" content="vi" />
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="copyright" content="{NV_SITE_COPYRIGHT}" />
-		<meta name="generator" content="{NV_SITE_NAME}" />
-		<title>{NV_SITE_TITLE}</title>
+
 		<link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}themes/default/css/admin.css" />
-		<script type="text/javascript" src="{NV_BASE_SITEURL}js/language/{NV_LANG_INTERFACE}.js"></script>
+		<script type="text/javascript" src="{NV_BASE_SITEURL}assets/js/language/{NV_LANG_INTERFACE}.js"></script>
+		<script type="text/javascript" src="{NV_BASE_SITEURL}assets/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 		<script type="text/javascript">
             var nv_siteroot = '{NV_BASE_SITEURL}';
             var nv_lang_interface = '{NV_LANG_INTERFACE}';
@@ -32,13 +26,10 @@
 		/* change it to what suits you! */
 		</script>
 		<![endif]-->
-		<script type="text/javascript" src="{NV_BASE_SITEURL}js/global.js"></script>
-		<script type="text/javascript" src="{NV_BASE_SITEURL}js/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="{NV_BASE_SITEURL}js/admin.js"></script>
-		<!-- BEGIN: nv_add_my_head -->
-		{NV_ADD_MY_HEAD} <!-- END: nv_add_my_head -->
-	</head>
-	<body>
+		<script type="text/javascript" src="{NV_BASE_SITEURL}assets/js/global.js"></script>
+		<script type="text/javascript" src="{NV_BASE_SITEURL}assets/js/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="{NV_BASE_SITEURL}assets/js/admin.js"></script>
+
 		<form action="{NV_BASE_SITEURL}index.php" method="post">
 			<input type="hidden" name ="{NV_NAME_VARIABLE}" value="{MODULE_NAME}" />
 			<input type="hidden" name ="{NV_OP_VARIABLE}" value="{OP}" />
@@ -145,7 +136,7 @@
 				</tbody>
 				<tbody class="second">
 					<tr>
-						<td align="right" id="burial_address">{LANG.burial_address}: </td>
+						<td align="right" id="burial_address">{burial_address}: </td>
 						<td colspan="3">
 						<input style="width: 450px" name="burial" type="text" value="{DATA.burial}" maxlength="255" />
 						</td>
@@ -223,7 +214,7 @@
 			<img alt="" title="" src="{NV_BASE_SITEURL}index.php?second=cronjobs&amp;p={NV_GENPASS}" width="1" height="1" />
 		</div>
 		<!-- BEGIN: nv_if_mudim -->
-		<script type="text/javascript" src="{NV_BASE_SITEURL}js/mudim.js"></script>
+		<script type="text/javascript" src="{NV_BASE_SITEURL}assets/js/mudim.js"></script>
 		<!-- END: nv_if_mudim -->
 	</body>
 </html>

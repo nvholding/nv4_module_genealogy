@@ -110,6 +110,7 @@ $lang_module['content_fam'] = 'Tên gia phả';
 $lang_module['content_homeimg'] = 'Hình Minh họa';
 $lang_module['content_homeimgalt'] = 'Chú thích cho hình minh họa';
 $lang_module['content_hometext'] = 'Giới thiệu ngắn gọn';
+$lang_module['hometext'] = 'Tiểu sử';
 $lang_module['content_bodytext'] = 'Nội dung chi tiết';
 $lang_module['search_author'] = 'Người biên soạn';
 $lang_module['search_patriarch'] = 'Tộc trưởng';

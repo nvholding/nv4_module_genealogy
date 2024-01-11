@@ -10,7 +10,7 @@
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
 /* if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_location'] . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
@@ -61,7 +61,7 @@ if (defined('NV_IS_USER'))
     if (!defined( 'NV_IS_ADMIN' ) or empty($post_gid)  or $post_gid['admin_id'] != $user_info['userid'])
     {
         $redirect = "<meta http-equiv=\"Refresh\" content=\"3;URL=" . nv_url_rewrite(NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name, true) . "\" />";
-        nv_info_die($lang_module['error_who_view_title'], $lang_module['error_who_view_title'], $lang_module['error_who_view_content'] . $redirect);
+        nv_info_die($nv_Lang->getModule('error_who_view_title'), $nv_Lang->getModule('error_who_view_title'), $nv_Lang->getModule('error_who_view_content') . $redirect);
     }
 
     $post['parentid'] = $nv_Request->get_int('parentid', 'post,get', 0);
@@ -182,7 +182,7 @@ if (defined('NV_IS_USER'))
                 $db->query($query);
                 nv_fix_genealogy_user($post['parentid']);
                 $nv_Cache->delMod($module_name);
-				$alias_family_tree=change_alias($lang_module['family_tree']);
+				$alias_family_tree=change_alias($nv_Lang->getModule('family_tree'));
 				$base_url_rewrite=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$post_gid['fid']]['alias'] . '/' . $post_gid['alias'] . '/Manager' . $global_config['rewrite_exturl'], true );
                 echo '<script type="text/javascript">
 					parent.location="' . $base_url_rewrite . '";
@@ -211,7 +211,7 @@ if (defined('NV_IS_USER'))
 
                 $op2 = ($post['opanniversary']) ? "anniversary" : "shows";
 
-                $alias_family_tree=change_alias($lang_module['family_tree']);
+                $alias_family_tree=change_alias($nv_Lang->getModule('family_tree'));
 				$base_url_rewrite=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$post_gid['fid']]['alias'] . '/' . $post_gid['alias'] . '/Manager' . $global_config['rewrite_exturl'], true );
                 echo '<script type="text/javascript">
 					parent.location="' . $base_url_rewrite . '";
@@ -279,9 +279,9 @@ if (defined('NV_IS_USER'))
         $post['gender'] = 2;
     }
 
-    $page_title = ($post['id'] == 0) ? $lang_module['u_add'] : $lang_module['u_edit'];
+    $page_title = ($post['id'] == 0) ? $nv_Lang->getModule('u_add') : $nv_Lang->getModule('u_edit');
 
-    $lang_module['burial_address'] = ($post['status'] == 0) ? $lang_module['u_burial'] : $lang_module['u_address'];
+    $burial_address = ($post['status'] == 0) ? $nv_Lang->getModule('u_burial') : $nv_Lang->getModule('u_address');
 
     $my_head .= "<link rel=\"stylesheet\" href=\"" . NV_BASE_SITEURL . "themes/" . $global_config['module_theme'] . "/css/tab_info.css\" type=\"text/css\" />";
     $my_head .= "<link type=\"text/css\" href=\"" . NV_BASE_SITEURL . "js/ui/jquery.ui.core.css\" rel=\"stylesheet\" />\n";
@@ -295,7 +295,7 @@ if (defined('NV_IS_USER'))
 
     $xtpl = new XTemplate("users.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 
-    $xtpl->assign('LANG', $lang_module);
+    $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
     $xtpl->assign('OP', $op);
 
     $xtpl->assign('NV_SITE_COPYRIGHT', "" . $global_config['site_name'] . " [" . $global_config['site_email'] . "] ");
@@ -315,6 +315,7 @@ if (defined('NV_IS_USER'))
     $xtpl->assign('NV_SITE_TIMEZONE_OFFSET', round(NV_SITE_TIMEZONE_OFFSET / 3600));
     $xtpl->assign('NV_CURRENTTIME', nv_date("T", NV_CURRENTTIME));
     $xtpl->assign('NV_COOKIE_PREFIX', $global_config['cookie_prefix']);
+    $xtpl->assign('burial_address', $burial_address);
 
     if ($post['parentid'] > 0 and $post['relationships'] == 1)
     {
@@ -328,7 +329,7 @@ if (defined('NV_IS_USER'))
         }
     }
 
-    $array_relationships = array(1 => $lang_module['u_relationships_1'], 2 => $lang_module['u_relationships_2'], 3 => $lang_module['u_relationships_3']);
+    $array_relationships = array(1 => $nv_Lang->getModule('u_relationships_1'), 2 => $nv_Lang->getModule('u_relationships_2'), 3 => $nv_Lang->getModule('u_relationships_3'));
     foreach ($array_relationships as $value => $title)
     {
         $arrayName = array('value' => $value, 'title' => $title, 'checked' => ($value == $post['relationships']) ? ' checked="checked"' : '');
@@ -344,7 +345,7 @@ if (defined('NV_IS_USER'))
         $xtpl->parse('main.root.weight');
     }
 
-    $array_gender = array(0 => $lang_module['u_gender_0'], 1 => $lang_module['u_gender_1'], 2 => $lang_module['u_gender_2']);
+    $array_gender = array(0 => $nv_Lang->getModule('u_gender_0'), 1 => $nv_Lang->getModule('u_gender_1'), 2 => $nv_Lang->getModule('u_gender_2'));
     foreach ($array_gender as $value => $title)
     {
         $temp = array('value' => $value, 'title' => $title, 'checked' => ($value == $post['gender']) ? ' checked="checked"' : '');
@@ -352,7 +353,7 @@ if (defined('NV_IS_USER'))
         $xtpl->parse('main.gender');
     }
 
-    $array_status = array(0 => $lang_module['u_status_0'], 1 => $lang_module['u_status_1'], 2 => $lang_module['u_status_2']);
+    $array_status = array(0 => $nv_Lang->getModule('u_status_0'), 1 => $nv_Lang->getModule('u_status_1'), 2 => $nv_Lang->getModule('u_status_2'));
     foreach ($array_status as $value => $title)
     {
         $arrayName = array('value' => $value, 'title' => $title, 'checked' => ($value == $post['status']) ? ' checked="checked"' : '');
@@ -442,5 +443,5 @@ if (defined('NV_IS_USER'))
 else
 {
     $redirect = "<meta http-equiv=\"Refresh\" content=\"2;URL=" . nv_url_rewrite(NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=users&" . NV_OP_VARIABLE . "=login&nv_redirect=" . nv_base64_encode($client_info['selfurl']), true) . "\" />";
-    nv_info_die($lang_module['error_login_title'], $lang_module['error_login_title'], $lang_module['error_login_content'] . $redirect);
+    nv_info_die($nv_Lang->getModule('error_login_title'), $nv_Lang->getModule('error_login_title'), $nv_Lang->getModule('error_login_content') . $redirect);
 }

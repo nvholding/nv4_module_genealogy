@@ -3,6 +3,20 @@
 			<link type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery.ui.theme.css" rel="stylesheet" />
 			<link type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery/jquery.treeview.css" rel="stylesheet" />
 			<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery/jquery.treeview.min.js"></script>
+<script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/domti.js"></script>
+    <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/fsv.js"></script>
+    <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/svgpz.js"></script>
+    <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/hmer.js"></script>
+    <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/lazysizes.min.js"></script>
+    <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/lib_base.js"></script>
+<script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/jquery-image-upload-resizer.js"></script>
+    <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/jquery.ui.position.js"></script>
+
+    <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/toastr.min.js"></script>
+    <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/toast-show.js"></script>
+<script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/tree_glx01.js"></script>
+<script src="{NV_BASE_SITEURL}assets/js/ui/jquery.ui.dialog.min.js"></script>
+
 <div class="col-md-24">
 		
 		

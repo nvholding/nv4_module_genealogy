@@ -32,7 +32,7 @@
 <!-- END: tree -->
 
 <!-- BEGIN: main -->
-<script src="{NV_BASE_SITEURL}assets/js/ui/jquery.ui.dialog.min.js"></script>
+
 
 <script type="text/javascript" src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/dinamods.js"></script>
 	<div id="dm_tabs_1"><!-- Tabs -->
@@ -247,8 +247,15 @@
 				</div>
 				<!-- END: contextMenu -->
 			</div>
-			<div id="create_genealogy_users" style="overflow:auto;padding:10px;" title="Họ : {PAGE_TITLE}">
-				<iframe id="modalIFrame" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"></iframe>
+			<div id="create_genealogy_users" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<i class="fa fa-spinner fa-spin"></i>
+						</div>
+						<button type="button" class="close" data-dismiss="modal"><span class="fa fa-times"></span></button>
+					</div>
+				</div>
 			</div>
 			<div id="UserModal">
 			</div>
@@ -274,49 +281,42 @@
 						bindings : {
 							'news1' : function(t) {
 								var r_split = t.id.split("_");
-								$("div#create_genealogy_users").dialog({
-									autoOpen : false,
-									width : 800,
-									height : 500,
-									modal : true,
-									position : "center"
-								}).dialog("open");
-								
-								$("#modalIFrame").attr('src', nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&relationships=1&parentid=' + r_split[1]);
+								//$("div#create_genealogy_users").modal("show");
+								$("#create_genealogy_users").find(".modal-content").addClass('sh-popup-modal');
+								$("#create_genealogy_users").find(".modal-title").html('');
+								$("#create_genealogy_users").find(".modal-body").html('<iframe class="popup-product-detail" src="' + nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&relationships=1&parentid=' + r_split[1] + '&amp;popup=1"></iframe>');
+								$("#create_genealogy_users").modal({
+									backdrop: "static"
+								});
+								//$("#modalIFrame").attr('src', nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&relationships=1&parentid=' + r_split[1]);
 							},
 							'news2' : function(t) {
 								var r_split = t.id.split("_");
-								$("div#create_genealogy_users").dialog({
-									autoOpen : false,
-									width : 800,
-									height : 500,
-									modal : true,
-									position : "center"
-								}).dialog("open");
-								$("#modalIFrame").attr('src', nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&relationships=2&parentid=' + r_split[1]);
+								$("#create_genealogy_users").find(".modal-content").addClass('sh-popup-modal');
+								$("#create_genealogy_users").find(".modal-title").html('');
+								$("#create_genealogy_users").find(".modal-body").html('<iframe class="popup-product-detail" src="' + nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&relationships=2&parentid=' + r_split[1] + '&amp;popup=1"></iframe>');
+								$("#create_genealogy_users").modal({
+									backdrop: "static"
+								});
+								//$("#modalIFrame").attr('src', );
 							},
 							'news3' : function(t) {
 								var r_split = t.id.split("_");
-								$("div#create_genealogy_users").dialog({
-									autoOpen : false,
-									width : 800,
-									height : 500,
-									modal : true,
-									position : "center"
-								}).dialog("open");
-								$("#modalIFrame").attr('src', nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&relationships=3&parentid=' + r_split[1]);
+								$("#create_genealogy_users").find(".modal-content").addClass('sh-popup-modal');
+								$("#create_genealogy_users").find(".modal-title").html('');
+								$("#create_genealogy_users").find(".modal-body").html('<iframe class="popup-product-detail" src="' + nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&relationships=3&parentid=' + r_split[1] + '&amp;popup=1"></iframe>');
+								$("#create_genealogy_users").modal({
+									backdrop: "static"
+								});
 							},
 							'edit' : function(t) {
 								var r_split = t.id.split("_");
-								$("div#create_genealogy_users").dialog({
-									autoOpen : false,
-									width : 800,
-									height : 500,
-									modal : true,
-									position : "center"
-								}).dialog("open");
-								
-								$("#modalIFrame").attr('src', nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&id=' + r_split[1]);
+								$("#create_genealogy_users").find(".modal-content").addClass('sh-popup-modal');
+								$("#create_genealogy_users").find(".modal-title").html('');
+								$("#create_genealogy_users").find(".modal-body").html('<iframe class="popup-product-detail" src="' + nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&id=' + r_split[1] + '&amp;popup=1"></iframe>');
+								$("#create_genealogy_users").modal({
+									backdrop: "static"
+								});
 							},
 							'delete' : function(t) {
 								if(confirm('Bạn có chắc chọn xóa thành viên, xóa thành viên này hệ thống sẽ xóa tất cả các thành viên là vợ, con, cháu ..')) {
@@ -349,6 +349,19 @@
 			Dinamods.setselectedClassTarget('link');
 			Dinamods.init(0,0);});
 	</script>
+	<style>
+	#create_genealogy_users .modal-dialog{
+		width: 850px;
+		max-width: 850px;
+	}
+	.popup-product-detail {
+		display: block;
+		width: 800px;
+		border: 0;
+		height:500px;
+		overflow: hidden;
+	}
+	</style>
 <!-- END: main -->
 
 

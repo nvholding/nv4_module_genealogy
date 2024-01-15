@@ -10,7 +10,7 @@
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
 if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_location') . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
@@ -59,9 +59,9 @@ if (defined('NV_IS_USER'))
         $db->query("UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET number=" . $number . " WHERE id =" . $gid);
 		$post_gid = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $gid)->fetch();
 		$db->query("UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_" . $post_gid['fid'] . " SET number=" . $number . " WHERE id =" . $gid);
-        nv_del_moduleCache($module_name);
+        $nv_Cache->delMod($module_name);
 		$post_gid = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $gid)->fetch();
-		$alias_family_tree=change_alias($lang_module['family_tree']);
+		$alias_family_tree=change_alias($nv_Lang->getModule('family_tree'));
 		$base_url_rewrite=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$post_gid['fid']]['alias'] . '/' . $post_gid['alias'] . '/'. $alias_family_tree . $global_config['rewrite_exturl'], true );
 		echo '<script type="text/javascript">
 			parent.location="' . $base_url_rewrite . '";
@@ -73,6 +73,6 @@ if (defined('NV_IS_USER'))
 else
 {
     $redirect = "<meta http-equiv=\"Refresh\" content=\"2;URL=" . nv_url_rewrite(NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=users&" . NV_OP_VARIABLE . "=login&nv_redirect=" . nv_base64_encode($client_info['selfurl']), true) . "\" />";
-    nv_info_die($lang_module['error_login_title'], $lang_module['error_login_title'], $lang_module['error_login_content'] . $redirect);
+    nv_info_die($nv_Lang->getModule('error_login_title'), $nv_Lang->getModule('error_login_title'), $nv_Lang->getModule('error_login_content') . $redirect);
 }
 ?>

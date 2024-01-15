@@ -61,7 +61,13 @@ $global_array_fam[0] = array(
 );
 $fid = 0;
 $parentid = 0;
-$alias_fam_url = isset( $array_op[0] ) ? $array_op[0] : '';
+if($op == 'main'){
+	$alias_fam_url = isset( $array_op[0] ) ? $array_op[0] : '';
+}else{
+	$alias_fam_url = isset( $array_op[0] ) ? $array_op[0] : '';
+	$genealogy_alias = isset( $array_op[1] ) ? $array_op[1] : '';
+	
+}
 $array_mod_title = array();
 
 $sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_family ORDER BY sort ASC';
@@ -72,6 +78,7 @@ foreach( $list as $l )
 	$global_array_fam[$l['fid']]['link'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $l['alias'];
 	if( $alias_fam_url == $l['alias'] )
 	{
+		
 		$fid = $l['fid'];
 		$parentid = $l['parentid'];
 	}
@@ -117,8 +124,10 @@ $page = 1;
 $per_page = $module_config[$module_name]['per_page'];
 $st_links = $module_config[$module_name]['st_links'];
 $count_op = sizeof( $array_op );
+
 if( ! empty( $array_op ) and $op == 'main' )
 {
+	
 	if( $fid == 0 )
 	{
 		$contents = $lang_module['nofampage'] . $array_op[0];
@@ -149,6 +158,7 @@ if( ! empty( $array_op ) and $op == 'main' )
 			
 			if(  $alias_url != '') 
 			{
+				
 				$op = 'detail';
 			}
 		}
@@ -175,6 +185,8 @@ if( ! empty( $array_op ) and $op == 'main' )
 		}
 
 	}
+}else{
+	$alias_url = isset( $array_op[1] ) ? $array_op[1] : '';
 }
 
 
@@ -543,3 +555,4 @@ function nv_giapha_export_pdf( $contents, $background, $row_genealogy )
 
 $sql = "SELECT fid, title, alias FROM " . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY weight ASC";
 $array_family = $nv_Cache->db( $sql, 'fid', $module_name );
+

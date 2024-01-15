@@ -1,6 +1,4 @@
 <!-- BEGIN: main -->
-			<link type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery.ui.core.css" rel="stylesheet" />
-			<link type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery.ui.theme.css" rel="stylesheet" />
 			<link type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery/jquery.treeview.css" rel="stylesheet" />
 			<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery/jquery.treeview.min.js"></script>
 <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/domti.js"></script>
@@ -14,8 +12,6 @@
 
     <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/toastr.min.js"></script>
     <script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/toast-show.js"></script>
-<script src="{NV_BASE_SITEURL}themes/{TEMPLATE}/js/tree_glx01.js"></script>
-<script src="{NV_BASE_SITEURL}assets/js/ui/jquery.ui.dialog.min.js"></script>
 
 <div class="col-md-24">
 		
@@ -51,7 +47,27 @@
 		<div class="clear" style="height: 0px">&nbsp;</div>
 	</div>
 </div>
-<div id="create_genealogy" style="overflow:auto;display:none;padding:10px;" title="Thêm gia phả">
-	<iframe id="modalIFrame" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"></iframe>
-</div>
+<div id="create_genealogy" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<i class="fa fa-spinner fa-spin"></i>
+						</div>
+						<button type="button" class="close" data-dismiss="modal"><span class="fa fa-times"></span></button>
+					</div>
+				</div>
+			</div>
+<style>
+	#create_genealogy .modal-dialog{
+		width: 850px;
+		max-width: 850px;
+	}
+	.popup-product-detail {
+		display: block;
+		width: 800px;
+		border: 0;
+		height:500px;
+		overflow: hidden;
+	}
+	</style>
 <!-- END: main -->

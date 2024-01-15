@@ -51,14 +51,15 @@ function get_alias() {
 }
 
 function creategenealogy(userid) {
-	$("div#create_genealogy").dialog({
-						autoOpen : false,
-						width : 800,
-						height : 500,
-						modal : true,
-						position : "center"
-					}).dialog("open");
-					$("#modalIFrame").attr('src', nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=creategenealogy&userid='+userid);
+	
+	$("#create_genealogy").find(".modal-content").addClass('sh-popup-modal');
+	$("#create_genealogy").find(".modal-title").html('');
+	$("#create_genealogy").find(".modal-body").html('<iframe class="popup-product-detail" src="' + nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=creategenealogy&userid='+userid + '&is_district=1&blank_title_district=1&blank_title_ward=1&is_ward=1&amp;popup=1"></iframe>');
+	$("#create_genealogy").modal({
+		backdrop: "static"
+	});
+	
+	
 	return false;
 }
 

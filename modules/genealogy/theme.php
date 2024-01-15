@@ -15,7 +15,7 @@ function viewfam_family_list( $genealogy_array, $page_title )
 	global $lang_module, $module_info, $module_name, $module_file, $topicalias, $module_config;
 
 	$xtpl = new XTemplate( 'family.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'LOCAL_TITLE', $page_title );
 	$xtpl->assign( 'IMGWIDTH1', $module_config[$module_name]['homewidth'] );
 	if( ! empty(  $genealogy_array ) )
@@ -52,7 +52,7 @@ function view_location( $array_fampage, $fid, $page, $generate_page )
 	global $module_name, $module_file, $module_upload, $lang_module, $module_config, $module_info, $global_array_fam, $global_array_location_city;
 
 	$xtpl = new XTemplate( 'view_location.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$i=1;
 	foreach( $array_fampage as $city_i =>  $rowscity ){
 		
@@ -81,7 +81,7 @@ function viewfam_list_new( $array_fampage, $fid, $page, $generate_page )
 	global $module_name, $module_file, $module_upload, $lang_module, $module_config, $module_info, $global_array_fam;
 
 	$xtpl = new XTemplate( 'viewfam_list.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'IMGWIDTH1', $module_config[$module_name]['homewidth'] );
 	$xtpl->assign( 'TOOLTIP_POSITION', $module_config[$module_name]['showtooltip'] ? $module_config[$module_name]['tooltip_position'] : '' );
 
@@ -142,7 +142,7 @@ function viewfam_page_new( $array_fampage, $array_fam_other, $generate_page )
 	global $global_array_fam, $module_name, $module_file, $module_upload, $lang_module, $module_config, $module_info, $global_array_fam, $fid, $page;
 
 	$xtpl = new XTemplate( 'viewfam_page.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'IMGWIDTH1', $module_config[$module_name]['homewidth'] );
 
 	if( ( $global_array_fam[$fid]['viewdescription'] and $page == 1 ) or $global_array_fam[$fid]['viewdescription'] == 2 )
@@ -263,7 +263,7 @@ function viewsubfam_main( $viewfam, $array_fam )
 	global $module_name, $module_file, $global_array_fam, $lang_module, $module_config, $module_info;
 
 	$xtpl = new XTemplate( $viewfam . '.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'TOOLTIP_POSITION', $module_config[$module_name]['showtooltip'] ? $module_config[$module_name]['tooltip_position'] : '' );
 
 	// Hien thi cac chu de con
@@ -367,7 +367,7 @@ function detail_theme( $news_contents, $array_keyword, $content_comment )
 	$xtpl->assign( 'LANG_GLOBAL', $lang_global );
 	$xtpl->assign( 'NV_BASE_SITEURL', NV_BASE_SITEURL );
 	$xtpl->assign( 'TEMPLATE', $global_config['module_theme'] );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'TOOLTIP_POSITION', $module_config[$module_name]['showtooltip'] ? $module_config[$module_name]['tooltip_position'] : '' );
 
 	$news_contents['addtime'] = nv_date( 'd/m/Y h:i:s', $news_contents['addtime'] );
@@ -534,7 +534,7 @@ function viewfam_location( $genealogy_array, $page_title )
 	global $lang_module, $module_info, $module_name, $module_file, $topicalias, $module_config;
 
 	$xtpl = new XTemplate( 'location.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'LOCAL_TITLE', $page_title );
 	$xtpl->assign( 'IMGWIDTH1', $module_config[$module_name]['homewidth'] );
 	if( ! empty(  $genealogy_array ) )
@@ -571,7 +571,8 @@ function viewfam_user_manager( $genealogy_array, $page_title )
 	global $lang_module, $nv_Lang, $module_info, $module_name, $module_file, $topicalias, $module_config;
 
 	$xtpl = new XTemplate( 'manager.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
+	$xtpl->assign( 'TEMPLATE', $module_info['template'] );
 	$xtpl->assign( 'LOCAL_TITLE', $page_title );
 	$xtpl->assign( 'IMGWIDTH1', $module_config[$module_name]['homewidth'] );
 	if( ! empty(  $genealogy_array ) )
@@ -607,7 +608,7 @@ function view_detail( $viewdetail , $news_contents, $array_keyword, $content_com
 {
 	global $lang_module, $nv_Lang, $module_info, $module_name, $module_file, $topicalias, $module_config, $global_array_fam;
 	$xtpl = new XTemplate( $viewdetail . '.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'DATA', $news_contents );
 	$xtpl->assign( 'ACTIVE', 'ui-genealogys-selected' );
 	if( defined( 'NV_IS_GENEALOGY_MANAGER' ) )
@@ -616,6 +617,27 @@ function view_detail( $viewdetail , $news_contents, $array_keyword, $content_com
 		$xtpl->assign( 'ADMINLINK', "<a  href=\"" . $link_manager . "\"><em class=\"fa fa-edit margin-right\"></em> " . $nv_Lang->getModule('manager') . "</a>");
 		$xtpl->parse( 'main.adminlink' );
 	}
+	$xtpl->parse( 'main' );
+	return $xtpl->text( 'main' );
+}
+function view_all( $viewdetail , $news_contents, $list_users, $array_keyword, $content_comment, $Treejsons )
+{
+	global $lang_module, $nv_Lang, $module_info, $module_name, $module_file, $topicalias, $module_config, $global_array_fam;
+	$xtpl = new XTemplate( $viewdetail . '.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
+	$xtpl->assign( 'DATA', $news_contents );
+	$xtpl->assign( 'ACTIVE', 'ui-genealogys-selected' );
+	$xtpl->assign('TEMPLATE', $module_info['template']);
+	$xtpl->assign('Treejsons', $Treejsons);
+	if (!empty($list_users))
+    {
+        $xtpl->assign('DATATREE', nv_manager_viewdirtree_genealogy(0,'manager-genealogy'));
+        $xtpl->parse('main.foldertree');
+    }
+    else
+    {
+			$xtpl->parse('main.no_list');
+    }
 	$xtpl->parse( 'main' );
 	return $xtpl->text( 'main' );
 }
@@ -688,7 +710,7 @@ function view_family( $news_contents, $list_users, $array_keyword, $content_comm
 	global $lang_module, $nv_Lang, $module_info, $module_name, $module_file, $topicalias, $module_config, $global_array_fam, $global_config;
 
 	$xtpl = new XTemplate( 'genealogy-show.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'ACTIVE', 'ui-genealogys-selected' );
 	$xtpl->assign( 'DATA', $news_contents );
 	
@@ -734,7 +756,7 @@ function sendmail_themme( $sendmail )
 
 	$xtpl = new XTemplate( 'sendmail.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
 	$xtpl->assign( 'SENDMAIL', $sendmail );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'NV_BASE_SITEURL', NV_BASE_SITEURL );
 	$xtpl->assign( 'GFX_NUM', NV_GFX_NUM );
 
@@ -771,7 +793,7 @@ function news_print( $result )
 
 	$xtpl = new XTemplate( 'print.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
 	$xtpl->assign( 'CONTENT', $result );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 
 	if( ! empty( $result['image']['width'] ) )
 	{
@@ -829,7 +851,7 @@ function search_theme( $key, $check_num, $date_array, $array_fam_search )
 	global $module_name, $module_info, $module_file, $lang_module, $module_name;
 
 	$xtpl = new XTemplate( 'search.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'NV_LANG_VARIABLE', NV_LANG_VARIABLE );
 	$xtpl->assign( 'NV_LANG_DATA', NV_LANG_DATA );
 	$xtpl->assign( 'NV_NAME_VARIABLE', NV_NAME_VARIABLE );
@@ -868,7 +890,7 @@ function search_result_theme( $key, $numRecord, $per_pages, $page, $array_conten
 	global $module_file, $module_info, $lang_module, $module_name, $global_array_fam, $module_config, $global_config;
 
 	$xtpl = new XTemplate( 'search.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'KEY', $key );
 	$xtpl->assign( 'IMG_WIDTH', $module_config[$module_name]['homewidth'] );
 	$xtpl->assign( 'TITLE_MOD', $nv_Lang->getModule('search_modul_title') );
@@ -932,7 +954,7 @@ function search_result_theme( $key, $numRecord, $per_pages, $page, $array_conten
 function nv_theme_genealogy_detail( $row_genealogy, $row_detail, $array_parentid, $OrgChart )
 {
 	global $global_config, $nv_Lang, $module_name, $module_file, $lang_module, $my_head, $module_info, $op;
-
+	
 	if( ! defined( 'SHADOWBOX' ) )
 	{
 		$my_head .= "<link rel=\"Stylesheet\" href=\"" . NV_BASE_SITEURL . "js/shadowbox/shadowbox.css\" />\n";
@@ -941,7 +963,7 @@ function nv_theme_genealogy_detail( $row_genealogy, $row_detail, $array_parentid
 		define( 'SHADOWBOX', true );
 	}
 	$xtpl = new XTemplate( "gdetail.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'GENEALOGY', $row_genealogy );
 	$xtpl->assign( 'ACTIVE', 'ui-genealogys-selected' );
 	if(int(count($row_detail))!=0){
@@ -958,7 +980,7 @@ function nv_theme_genealogy_detail( $row_genealogy, $row_detail, $array_parentid
 			'burial' );
 		$i = 0;
 
-		$lang_module['u_life'] = ( $row_detail['life'] >= 50 ) ? $nv_Lang->getModule('u_life_ht') : $nv_Lang->getModule('u_life_hd');
+		\NukeViet\Core\Language::$lang_module['u_life'] = ( $row_detail['life'] >= 50 ) ? $nv_Lang->getModule('u_life_ht') : $nv_Lang->getModule('u_life_hd');
 
 		foreach( $array_key as $key )
 		{
@@ -1030,7 +1052,7 @@ function manager_theme($news_contents, $list_users, $array_keyword, $content_com
 		global $global_config, $nv_Lang, $module_name, $module_file, $lang_module, $my_head, $module_info, $op, $global_array_fam, $global_array_location_city, $global_array_location_district, $global_array_location_ward;
 	    
 $xtpl = new XTemplate("manager-genealogy.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-    $xtpl->assign('LANG', $lang_module);
+    $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
     $xtpl->assign('NV_ACTION_FILE', nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/Manager'  . $global_config['rewrite_exturl'], true ));
     $xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
     $xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
@@ -1100,6 +1122,7 @@ $xtpl = new XTemplate("manager-genealogy.tpl", NV_ROOTDIR . "/themes/" . $module
 		
         $xtpl->assign('DATATREE', nv_manager_viewdirtree_genealogy(0,'manager-genealogy'));
         $xtpl->parse('main.foldertree');
+		print_r(defined( 'NV_IS_GENEALOGY_MANAGER' ));
 		if( defined( 'NV_IS_GENEALOGY_MANAGER' )){
 			$xtpl->parse('main.contextMenu');
 		}
@@ -1116,15 +1139,49 @@ $xtpl = new XTemplate("manager-genealogy.tpl", NV_ROOTDIR . "/themes/" . $module
     return $xtpl->text('main');
 
 }
-function create_genealogy($news_contents, $list_users, $array_keyword, $content_comment)
+function create_genealogy($news_contents, $list_users, $array_keyword, $content_comment, $data_config)
 {
-		global $global_config, $module_name, $module_file, $lang_module, $my_head, $module_info, $op, $global_array_fam, $global_array_location_city, $global_array_location_district, $global_array_location_ward;
+		global $global_config, $nv_Lang, $module_name, $module_file, $lang_module, $my_head, $module_info, $op, $global_array_fam, $global_array_location_city, $global_array_location_district, $global_array_location_ward;
 	    $xtpl = new XTemplate("create-genealogy.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-    $xtpl->assign('LANG', $lang_module);
-    $xtpl->assign('NV_ACTION_FILE', nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/Manager'  . $global_config['rewrite_exturl'], true ));
+    $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
+    $xtpl->assign('NV_ACTION_FILE', nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=creategenealogy', true ));
     $xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
     $xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
     $xtpl->assign('MODULE_NAME', $module_name);
+	
+    if ($data_config['multiple_province']) {
+        $data_config['select_provinceid'] = explode(',', $data_config['select_provinceid']);
+        $data_config['select_districtid'] = explode(',', $data_config['select_districtid']);
+        $data_config['select_wardid'] = explode(',', $data_config['select_wardid']);
+    }
+    
+    $location = new NukeViet\Module\genealogy\Location();
+    $location->set('SelectCountryid', $data_config['select_countryid']);
+    $location->set('SelectProvinceid', $data_config['select_provinceid']);
+    $location->set('SelectDistrictid', $data_config['select_districtid']);
+    $location->set('SelectWardid', $data_config['select_wardid']);
+    $location->set('AllowCountry', $data_config['allow_country']);
+    $location->set('AllowProvince', $data_config['allow_province']);
+    $location->set('AllowDistrict', $data_config['allow_district']);
+    $location->set('AllowWard', $data_config['allow_ward']);
+    $location->set('MultipleProvince', $data_config['multiple_province']);
+    $location->set('MultipleDistrict', $data_config['multiple_district']);
+    $location->set('MultipleWard', $data_config['multiple_ward']);
+    $location->set('IsDistrict', $data_config['is_district']);
+    $location->set('IsWard', $data_config['is_ward']);
+    $location->set('BlankTitleCountry', $data_config['blank_title_country']);
+    $location->set('BlankTitleProvince', $data_config['blank_title_province']);
+    $location->set('BlankTitleDistrict', $data_config['blank_title_district']);
+    $location->set('BlankTitleWard', $data_config['blank_title_ward']);
+    $location->set('NameCountry', $data_config['name_country']);
+    $location->set('NameProvince', $data_config['name_province']);
+    $location->set('NameDistrict', $data_config['name_district']);
+    $location->set('NameWard', $data_config['name_ward']);
+    $location->set('Index', $data_config['index']);
+    $location->set('ColClass', $data_config['col_class']);
+    
+    
+    $xtpl->assign('FORM_INPUT', $location->buildInput('honguyen', 'genealogy'));
     $xtpl->assign('TEMPLATE', $module_info['template']);
 	
     $xtpl->assign('OP', $op);
@@ -1139,19 +1196,20 @@ function create_genealogy($news_contents, $list_users, $array_keyword, $content_
 
     foreach ($global_array_location_city as $global_array_city_i)
 	{
-        $global_array_city_i['selected'] = ($global_array_city_i['city_id'] == $news_contents['cityid']) ? ' selected="selected"' : '';
+		
+        $global_array_city_i['selected'] = ($global_array_city_i['provinceid'] == $news_contents['cityid']) ? ' selected="selected"' : '';
         $xtpl->assign('CITY', $global_array_city_i);
         $xtpl->parse('main.city');
     }
 	foreach ($global_array_location_district as $global_array_district_i)
 	{
-        $global_array_district_i['selected'] = ($global_array_district_i['district_id'] == $news_contents['districtid']) ? ' selected="selected"' : '';
+        $global_array_district_i['selected'] = ($global_array_district_i['districtid'] == $news_contents['districtid']) ? ' selected="selected"' : '';
         $xtpl->assign('DISTRICT', $global_array_district_i);
         $xtpl->parse('main.district');
     }
 	foreach ($global_array_location_ward as $global_array_ward_i)
 	{
-        $global_array_ward_i['selected'] = ($global_array_ward_i['ward_id'] == $news_contents['wardid']) ? ' selected="selected"' : '';
+        $global_array_ward_i['selected'] = ($global_array_ward_i['wardid'] == $news_contents['wardid']) ? ' selected="selected"' : '';
         $xtpl->assign('WARD', $global_array_ward_i);
         $xtpl->parse('main.ward');
     }

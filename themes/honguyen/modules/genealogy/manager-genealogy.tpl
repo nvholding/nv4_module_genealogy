@@ -213,7 +213,6 @@
 			<link type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet" />
 			<link type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery/jquery.treeview.css" rel="stylesheet" />
 			<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery/jquery.treeview.min.js"></script>
-			<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/contextmenu/jquery.contextmenu.r2.js"></script>
 			<div id="module_show_list">
 			<center>
 					<b>Hướng dẫn:</b><i>Click chuột phải lên từng thành viên để có thể cập nhật hoặc thêm mới vợ con.</i>
@@ -224,7 +223,6 @@
 					{DATATREE}
 				</ul>
 				<!-- END: foldertree -->
-				<!-- BEGIN: contextMenu -->
 				<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/contextmenu/jquery.contextmenu.r2.js"></script>
 				<div class="contextMenu" id="menu_genealogy_show">
 					<ul>
@@ -245,7 +243,7 @@
 						</li>
 					</ul>
 				</div>
-				<!-- END: contextMenu -->
+			
 			</div>
 			<div id="create_genealogy_users" class="modal fade" role="dialog">
 				<div class="modal-dialog">
@@ -333,7 +331,13 @@
 			<script type="text/javascript">
 				//<![CDATA[
 				$(document).ready(function() {
-					$("#modalIFrame").attr('src', nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&parentid=0');
+					$("#create_genealogy_users").find(".modal-content").addClass('sh-popup-modal');
+					$("#create_genealogy_users").find(".modal-title").html('');
+					$("#create_genealogy_users").find(".modal-body").html('<iframe class="popup-product-detail" src="' + nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&parentid=0' + '&amp;popup=1"></iframe>');
+					$("#create_genealogy_users").modal({
+						backdrop: "static"
+					});
+					//$("#modalIFrame").attr('src', nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=users&gid={DATA.id}&parentid=0');
 				});
 				//]]>
 			</script>

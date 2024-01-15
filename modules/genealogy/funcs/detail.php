@@ -31,7 +31,7 @@ $array_relationships = array(1 => $nv_Lang->getModule('u_relationships_1'), 2 =>
 $array_gender = array(0 => $nv_Lang->getModule('u_gender_0'), 1 => $nv_Lang->getModule('u_gender_1'), 2 => $nv_Lang->getModule('u_gender_2'));
 $array_status = array(0 => $nv_Lang->getModule('u_status_0'), 1 => $nv_Lang->getModule('u_status_1'), 2 => $nv_Lang->getModule('u_status_2'));
 
-
+print_r(nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ));
 if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 {
 

@@ -57,8 +57,8 @@ if (defined('NV_IS_USER'))
     }
 	
     $post_gid = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $post['gid'])->fetch();
-	//die($user_info['userid'].'/'.$post_gid['admin_id']);
-    if (!defined( 'NV_IS_ADMIN' ) or empty($post_gid)  or $post_gid['admin_id'] != $user_info['userid'])
+	
+    if (defined( 'NV_IS_ADMIN' ) or empty($post_gid)  or $post_gid['admin_id'] != $user_info['userid'])
     {
         $redirect = "<meta http-equiv=\"Refresh\" content=\"3;URL=" . nv_url_rewrite(NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name, true) . "\" />";
         nv_info_die($nv_Lang->getModule('error_who_view_title'), $nv_Lang->getModule('error_who_view_title'), $nv_Lang->getModule('error_who_view_content') . $redirect);

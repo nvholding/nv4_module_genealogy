@@ -39,7 +39,11 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 
 	if(defined( 'NV_IS_ADMIN' ) OR ($user_info['userid'] == $news_contents['admin_id']))
 	{
-		
+		if( defined( 'NV_IS_ADMIN' )){
+			define( 'NV_IS_GENEALOGY_MANAGER', true);
+		}elseif($user_info['userid'] == $news_contents['admin_id']){
+			define( 'NV_IS_GENEALOGY_MANAGER', true);
+		}
 		if( $news_contents['id'] > 0 AND ($array_op[2] == "Manager") )
 		{
 			if ($nv_Request->get_string('submit', 'post') != "")

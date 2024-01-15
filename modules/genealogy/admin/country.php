@@ -203,7 +203,7 @@ if (! $nv_Request->isset_request('id', 'post,get')) {
 }
 
 $xtpl = new XTemplate($op . '.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
-$xtpl->assign('LANG', $lang_module);
+$xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
 $xtpl->assign('MODULE_NAME', $module_name);
 $xtpl->assign('MODULE_UPLOAD', $module_upload);
 $xtpl->assign('OP', $op);
@@ -255,7 +255,7 @@ if (empty($row['countryid'])) {
 $xtpl->parse('main');
 $contents = $xtpl->text('main');
 
-$page_title = $lang_module['country'];
+$page_title = \NukeViet\Core\Language::$lang_module['country'];
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_admin_theme($contents);

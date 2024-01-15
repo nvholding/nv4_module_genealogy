@@ -492,3 +492,8 @@ $lang_module['list_level'] = "Danh sách đời thứ : %s ";
 
 
 $lang_module['genealogy_edit'] = 'Sửa gia phả';
+$lang_module['country_cc'] = 'Chọn quốc gia';
+$lang_module['province_cc'] = 'Chọn tỉnh';
+$lang_module['district_cc'] = 'Chọn huyện';
+$lang_module['ward_cc'] = 'Chọn xã';
+$lang_module['all'] = '---Chọn tỉnh/thành---';

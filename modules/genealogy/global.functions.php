@@ -11,6 +11,7 @@
 if( ! defined( 'NV_MAINFILE' ) ) die( 'Stop!!!' );
 
 $timecheckstatus = $module_config[$module_name]['timecheckstatus'];
+$module_config['genealogy']['allow_type'] = 1;
 if( $timecheckstatus > 0 and $timecheckstatus < NV_CURRENTTIME )
 {
 	nv_set_status_module();

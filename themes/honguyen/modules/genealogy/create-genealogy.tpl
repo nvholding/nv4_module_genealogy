@@ -14,6 +14,8 @@
 <!-- END: tree -->
 
 <!-- BEGIN: main -->
+<link rel="stylesheet" href="{ASSETS_STATIC_URL}/js/select2/select2.min.css">
+
 	<div class="dm_tabcontent" id="dm_tab_1_1" >
 		<form action="{NV_ACTION_FILE}" method="post">
 			<table class="tab1" width="100%">
@@ -44,38 +46,10 @@
 				</tbody>
 				<tbody>
 					<tr>
-						<td>Phường/Xã :</td>
-						<td>
-						<select name="wardid">
-							<option value="0">-- Chọn phường --</option>
-							<!-- BEGIN: ward -->
-							<option value="{WARD.ward_id}" {WARD.selected}>{WARD.title}</option>
-							<!-- END: ward -->
-						</select> <span style="color: #CC0000">(*)</span></td>
-					</tr>
-				</tbody>
-				<tbody>
-					<tr>
-						<td>Quận/Huyện :</td>
-						<td>
-						<select name="districtid">
-							<option value="0">-- Chọn quận --</option>
-							<!-- BEGIN: district -->
-							<option value="{DISTRICT.district_id}" {DISTRICT.selected}>{DISTRICT.title}</option>
-							<!-- END: district -->
-						</select> <span style="color: #CC0000">(*)</span></td>
-					</tr>
-				</tbody>
-				<tbody>
-					<tr>
 						<td>Tỉnh/TP:</td>
 						<td>
-						<select name="cityid">
-							<option value="0">-- Chọn tỉnh --</option>
-							<!-- BEGIN: city -->
-							<option value="{CITY.city_id}" {CITY.selected}>{CITY.title}</option>
-							<!-- END: city -->
-						</select> <span style="color: #CC0000">(*)</span></td>
+							{FORM_INPUT}
+						</td>
 					</tr>
 				</tbody>
 				
@@ -176,5 +150,117 @@
 				<br/><br/>
 		</form>
 	</div>
+<script src="{ASSETS_STATIC_URL}/js/select2/select2.min.js"></script>
+<script src="{ASSETS_LANG_STATIC_URL}/js/select2/i18n/{NV_LANG_INTERFACE}.js"></script>
+
+<script>
 
 <!-- END: main -->
+
+	$("#cityid").select2();
+	$("#districtid").select2({
+        language: "vi",
+        ajax: {
+            url: script_name + '?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=creategenealogy&get_district_json=1',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, // let our custom formatter work
+        minimumInputLength: 3,
+        templateResult: formatRepo, // omitted for brevity, see the source of this page
+        templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+    });
+	$("#wardid").select2({
+        language: "vi",
+        ajax: {
+            url: script_name + '?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=content&get_topic_json=1',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, // let our custom formatter work
+        minimumInputLength: 3,
+        templateResult: formatRepo, // omitted for brevity, see the source of this page
+        templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+    });
+	function formatRepo(repo) {
+		if (repo.loading) return repo.text;
+		return repo.title;
+	}
+
+	function formatRepoSelection(repo) {
+		return repo.title || repo.text;
+	}
+</script>
+<tbody>
+					<tr>
+						<td>Tỉnh/TP:</td>
+						<td>
+						<select name="cityid" id="cityid">
+							<option value="0">-- Chọn tỉnh --</option>
+							<!-- BEGIN: city -->
+							<option value="{CITY.provinceid}" {CITY.selected}>{CITY.title}</option>
+							<!-- END: city -->
+						</select> <span style="color: #CC0000">(*)</span></td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr>
+						<td>Quận/Huyện :</td>
+						<td>
+						<select name="districtid" id="districtid">
+							<option value="0">-- Chọn quận --</option>
+							<!-- BEGIN: district -->
+							<option value="{DISTRICT.districtid}" {DISTRICT.selected}>{DISTRICT.title}</option>
+							<!-- END: district -->
+						</select> <span style="color: #CC0000">(*)</span></td>
+					</tr>
+				</tbody>
+				
+				<tbody>
+					<tr>
+						<td>Phường/Xã :</td>
+						<td>
+						<select name="wardid" id="wardid">
+							<option value="0">-- Chọn phường --</option>
+							<!-- BEGIN: ward -->
+							<option value="{WARD.wardid}" {WARD.selected}>{WARD.title}</option>
+							<!-- END: ward -->
+						</select> <span style="color: #CC0000">(*)</span></td>
+					</tr>
+				</tbody>

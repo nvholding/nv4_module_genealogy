@@ -77,7 +77,7 @@
     </div>
 	<!-- END: content -->
 
-	<!-- BEGIN: orgchart -->
+	<!-- BEGIN: orgcharts -->
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<script type="text/javascript">
 		google.load('visualization', '1', {
@@ -120,7 +120,7 @@
 		<br>
    </div>
 
-	<!-- END: orgchart -->
+	<!-- END: orgcharts -->
 
 	<!-- BEGIN: parentid -->
 	<div class="tab-giapha padding-topbottom">

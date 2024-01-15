@@ -41,29 +41,28 @@ if( $NV_IS_ADMIN_FULL_MODULE )
 }
 
 $array_viewfam_full = array(
-	'view_location' => $lang_module['view_location'],
-	'viewfam_page_new' => $lang_module['viewfam_page_new'],
-	'viewfam_page_old' => $lang_module['viewfam_page_old'],
-	'viewfam_list_new' => $lang_module['viewfam_list_new'],
-	'viewfam_list_old' => $lang_module['viewfam_list_old'],
-	'viewfam_none' => $lang_module['viewfam_none']
+	'view_location' => \NukeViet\Core\Language::$lang_module['view_location'],
+	'viewfam_page_new' => \NukeViet\Core\Language::$lang_module['viewfam_page_new'],
+	'viewfam_page_old' => \NukeViet\Core\Language::$lang_module['viewfam_page_old'],
+	'viewfam_list_new' => \NukeViet\Core\Language::$lang_module['viewfam_list_new'],
+	'viewfam_list_old' => \NukeViet\Core\Language::$lang_module['viewfam_list_old'],
+	'viewfam_none' => \NukeViet\Core\Language::$lang_module['viewfam_none']
 );
 $array_viewfam_nosub = array(
-	'viewfam_page_new' => $lang_module['viewfam_page_new'],
-	'viewfam_page_old' => $lang_module['viewfam_page_old'],
-	'viewfam_list_new' => $lang_module['viewfam_list_new'],
-	'viewfam_list_old' => $lang_module['viewfam_list_old'],
+	'viewfam_page_new' => \NukeViet\Core\Language::$lang_module['viewfam_page_new'],
+	'viewfam_page_old' => \NukeViet\Core\Language::$lang_module['viewfam_page_old'],
+	'viewfam_list_new' => \NukeViet\Core\Language::$lang_module['viewfam_list_new'],
+	'viewfam_list_old' => \NukeViet\Core\Language::$lang_module['viewfam_list_old'],
 );
 
 $array_allowed_comm = array(
-	$lang_global['no'],
-	$lang_global['level6'],
-	$lang_global['level4']
+	\NukeViet\Core\Language::$lang_global['no'],
+	\NukeViet\Core\Language::$lang_global['level6'],
+	\NukeViet\Core\Language::$lang_global['level4']
 );
 
 define( 'NV_IS_FILE_ADMIN', true );
 require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
-require_once NV_ROOTDIR . '/modules/' . $module_file . '/location.class.php';
 
 global $global_array_fam;
 $global_array_fam = array();
@@ -141,7 +140,7 @@ function nv_show_fam_list( $parentid = 0 )
 	global $db, $lang_module, $lang_global, $module_name, $module_data, $array_viewfam_full, $array_viewfam_nosub, $array_fam_admin, $global_array_fam, $admin_id, $global_config, $module_file;
 
 	$xtpl = new XTemplate( 'fam_list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 	$xtpl->assign( 'GLANG', $lang_global );
 
 	// Cac chu de co quyen han
@@ -227,12 +226,12 @@ function nv_show_fam_list( $parentid = 0 )
 			if( defined( 'NV_IS_ADMIN_MODULE' ) or (isset( $array_fam_admin[$admin_id][$fid] ) and $array_fam_admin[$admin_id][$fid]['add_content'] == 1) )
 			{
 				$func_fam_disabled = false;
-				$admin_funcs[] = "<em class=\"fa fa-plus fa-lg\">&nbsp;</em> <a href=\"" . NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=genealogy&amp;fid=" . $fid . "&amp;parentid=" . $parentid . "\">" . $lang_module['genealogy_add'] . "</a>\n";
+				$admin_funcs[] = "<em class=\"fa fa-plus fa-lg\">&nbsp;</em> <a href=\"" . NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=genealogy&amp;fid=" . $fid . "&amp;parentid=" . $parentid . "\">" . \NukeViet\Core\Language::$lang_module['genealogy_add'] . "</a>\n";
 			}
 			if( defined( 'NV_IS_ADMIN_MODULE' ) or ($parentid > 0 and isset( $array_fam_admin[$admin_id][$parentid] ) and $array_fam_admin[$admin_id][$parentid]['admin'] == 1) )
 			{
 				$func_fam_disabled = false;
-				$admin_funcs[] = "<em class=\"fa fa-edit fa-lg\">&nbsp;</em> <a class=\"\" href=\"" . NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=family&amp;fid=" . $fid . "&amp;parentid=" . $parentid . "#edit\">" . $lang_global['edit'] . "</a>\n";
+				$admin_funcs[] = "<em class=\"fa fa-edit fa-lg\">&nbsp;</em> <a class=\"\" href=\"" . NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=family&amp;fid=" . $fid . "&amp;parentid=" . $parentid . "#edit\">" . \NukeViet\Core\Language::$lang_global['edit'] . "</a>\n";
 			}
 			if( defined( 'NV_IS_ADMIN_MODULE' ) or ($parentid > 0 and isset( $array_fam_admin[$admin_id][$parentid] ) and $array_fam_admin[$admin_id][$parentid]['admin'] == 1) )
 			{

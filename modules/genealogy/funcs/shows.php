@@ -9,15 +9,7 @@
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_location') . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
+
 
 function nv_viewdirtree_genealogy_delete($parentid = 0)
 {
@@ -31,7 +23,7 @@ function nv_viewdirtree_genealogy_delete($parentid = 0)
             nv_viewdirtree_genealogy_delete($_dir['id']);
         }
     }
-    $db->query("DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $parentid);
+    $db->query("DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $parentid);
 }
 
 if (defined('NV_IS_USER'))
@@ -45,7 +37,7 @@ if (defined('NV_IS_USER'))
     if ($deleteid > 0)
     {
         $array_data_delete = array();
-        $query = "SELECT id, parentid FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $gid . " ORDER BY parentid, weight ASC";
+        $query = "SELECT id, parentid FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $gid . " ORDER BY parentid, weight ASC";
         $result = $db->query($query);
         while ($row = $result->fetch())
         {
@@ -55,12 +47,12 @@ if (defined('NV_IS_USER'))
 
         nv_viewdirtree_genealogy_delete($deleteid);
 
-        list($number) = $db->query("SELECT  count(*) FROM " . NV_PREFIXLANG . "_" . $module_data . " where gid=" . $gid)->fetch(3);
-        $db->query("UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET number=" . $number . " WHERE id =" . $gid);
-		$post_gid = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $gid)->fetch();
-		$db->query("UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_" . $post_gid['fid'] . " SET number=" . $number . " WHERE id =" . $gid);
+        list($number) = $db->query("SELECT  count(*) FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " where gid=" . $gid)->fetch(3);
+        $db->query("UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET number=" . $number . " WHERE id =" . $gid);
+		$post_gid = $db->query("SELECT * FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $gid)->fetch();
+		$db->query("UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $post_gid['fid'] . " SET number=" . $number . " WHERE id =" . $gid);
         $nv_Cache->delMod($module_name);
-		$post_gid = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $gid)->fetch();
+		$post_gid = $db->query("SELECT * FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $gid)->fetch();
 		$alias_family_tree=change_alias($nv_Lang->getModule('family_tree'));
 		$base_url_rewrite=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$post_gid['fid']]['alias'] . '/' . $post_gid['alias'] . '/'. $alias_family_tree . $global_config['rewrite_exturl'], true );
 		echo '<script type="text/javascript">

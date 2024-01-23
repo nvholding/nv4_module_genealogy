@@ -9,16 +9,6 @@
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
 
 $title = $nv_Request->get_title( 'title', 'post', '' );
 $alias = change_alias( $title );
@@ -29,7 +19,7 @@ $mod = $nv_Request->get_string( 'mod', 'post', '' );
 
 if( $mod == 'cat' )
 {
-	$tab = NV_PREFIXLANG . '_' . $module_data . '_cat';
+	$tab = $db_config['dbsystem'] . '.' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_cat';
 	$stmt = $db->prepare( 'SELECT COUNT(*) FROM ' . $tab . ' WHERE catid!=' . $id . ' AND alias= :alias' );
 	$stmt->bindParam( ':alias', $alias, PDO::PARAM_STR );
 	$stmt->execute();
@@ -43,7 +33,7 @@ if( $mod == 'cat' )
 }
 elseif( $mod == 'topics' )
 {
-	$tab = NV_PREFIXLANG . '_' . $module_data . '_topics';
+	$tab = $db_config['dbsystem'] . '.' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_topics';
 	$stmt = $db->prepare( 'SELECT COUNT(*) FROM ' . $tab . ' WHERE topicid!=' . $id . ' AND alias= :alias' );
 	$stmt->bindParam( ':alias', $alias, PDO::PARAM_STR );
 	$stmt->execute();
@@ -57,7 +47,7 @@ elseif( $mod == 'topics' )
 }
 elseif( $mod == 'blockcat' )
 {
-	$tab = NV_PREFIXLANG . '_' . $module_data . '_block_cat';
+	$tab = $db_config['dbsystem'] . '.' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_block_cat';
 	$stmt = $db->prepare( 'SELECT COUNT(*) FROM ' . $tab . ' WHERE bid!=' . $id . ' AND alias= :alias' );
 	$stmt->bindParam( ':alias', $alias, PDO::PARAM_STR );
 	$stmt->execute();

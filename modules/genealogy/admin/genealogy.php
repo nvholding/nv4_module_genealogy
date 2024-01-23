@@ -11,7 +11,7 @@
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
 if( ! defined( 'NV_MODULE_LOCATION' ) ){
 	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_location') . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
@@ -80,9 +80,9 @@ if( ! defined( 'NV_IS_SPADMIN' ) and strpos( $structure_upload, 'username' ) !==
 $fid = $nv_Request->get_int( 'fid', 'get', 0 );
 $parentid = $nv_Request->get_int( 'parentid', 'get', 0 );
 $array_imgposition = array(
-	0 => $lang_module['imgposition_0'],
-	1 => $lang_module['imgposition_1'],
-	2 => $lang_module['imgposition_2'] );
+	0 => $nv_Lang->getModule('imgposition_0'),
+	1 => $nv_Lang->getModule('imgposition_1'),
+	2 => $nv_Lang->getModule('imgposition_2') );
 
 $rowcontent = array(
 	'id' => '',
@@ -131,7 +131,7 @@ $rowcontent = array(
 	'email' => '',
 );
 
-$page_title = $lang_module['genealogy_add'];
+$page_title = $nv_Lang->getModule('genealogy_add');
 $error = array();
 $groups_list = nv_groups_list();
 $array_keywords_old = array();
@@ -140,7 +140,7 @@ $rowcontent['id'] = $nv_Request->get_int( 'id', 'get,post', 0 );
 if( $rowcontent['id'] > 0 )
 {
 	$check_permission = false;
-	$rowcontent = $db->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy where id=' . $rowcontent['id'] )->fetch();
+	$rowcontent = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy where id=' . $rowcontent['id'] )->fetch();
 	if( ! empty( $rowcontent['id'] ) )
 	{
 		$rowcontent['mode'] = 'edit';
@@ -191,13 +191,13 @@ if( $rowcontent['id'] > 0 )
 		die();
 	}
 
-	$page_title = $lang_module['genealogy_edit'];
+	$page_title = $nv_Lang->getModule('genealogy_edit');
 
-	$body_contents = $db->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $rowcontent['id'] / 2000 ) . ' where id=' . $rowcontent['id'] )->fetch();
+	$body_contents = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $rowcontent['id'] / 2000 ) . ' where id=' . $rowcontent['id'] )->fetch();
 	$rowcontent = array_merge( $rowcontent, $body_contents );
 	unset( $body_contents );
 
-	$_query = $db->query( 'SELECT tid, keyword FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id=' . $rowcontent['id'] . ' ORDER BY keyword ASC' );
+	$_query = $db->query( 'SELECT tid, keyword FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id=' . $rowcontent['id'] . ' ORDER BY keyword ASC' );
 	while( $row = $_query->fetch() )
 	{
 		$array_keywords_old[$row['tid']] = $row['keyword'];
@@ -280,7 +280,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 	elseif( $nv_Request->isset_request( 'status4', 'post' ) ) $rowcontent['status'] = 4; //luu tam
 	else  $rowcontent['status'] = 6; //gui, cho bien tap
 
-	$message_error_show = $lang_module['permissions_pub_error'];
+	$message_error_show = $nv_Lang->getModule('permissions_pub_error');
 	if( $rowcontent['status'] == 1 )
 	{
 		$array_fam_check_content = $array_fam_pub_content;
@@ -292,7 +292,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 	elseif( $rowcontent['status'] == 0 )
 	{
 		$array_fam_check_content = $array_censor_content;
-		$message_error_show = $lang_module['permissions_sendspadmin_error'];
+		$message_error_show = $nv_Lang->getModule('permissions_sendspadmin_error');
 	}
 	else
 	{
@@ -307,7 +307,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 				$error[] = sprintf( $message_error_show, $global_array_fam[$fid_i]['title'] );
 			}
 		}else{
-			$error[] = sprintf( $lang_module['error_fam'] );
+			$error[] = sprintf( $nv_Lang->getModule('error_fam') );
 		}
 	}
 
@@ -414,7 +414,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 		$keywords_return = array();
 		foreach ( $keywords as $keyword_i )
 		{
-			$sth = $db->prepare( 'SELECT COUNT(*) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id where keyword = :keyword' );
+			$sth = $db->prepare( 'SELECT COUNT(*) FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id where keyword = :keyword' );
 			$sth->bindParam( ':keyword', $keyword_i, PDO::PARAM_STR );
 			$sth->execute();
 			if( $sth->fetchColumn() )
@@ -446,20 +446,20 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 
 	if( empty( $rowcontent['title'] ) )
 	{
-		$error[] = $lang_module['error_title'];
+		$error[] = $nv_Lang->getModule('error_title');
 	}
 	elseif( empty( $rowcontent['listfid'] ) )
 	{
-		$error[] = $lang_module['error_fam'];
+		$error[] = $nv_Lang->getModule('error_fam');
 	}elseif( empty( $rowcontent['cityid'] ) )
 	{
-		$error[] = $lang_module['error_location_city'];
+		$error[] = $nv_Lang->getModule('error_location_city');
 	}elseif( empty( $rowcontent['districtid'] ) )
 	{
-		$error[] = $lang_module['error_location_city'];
+		$error[] = $nv_Lang->getModule('error_location_city');
 	}elseif( empty( $rowcontent['wardid'] ) )
 	{
-		$error[] = $lang_module['error_location_city'];
+		$error[] = $nv_Lang->getModule('error_location_city');
 	}
 
 	if( empty( $error ) )
@@ -507,7 +507,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 			{
 				$rowcontent['status'] = 2;
 			}
-			$sql = 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy
+			$sql = 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy
 				(fid, listfid, admin_id, author, patriarch, addtime, edittime, status, publtime, exptime, archive, title, alias, hometext, homeimgfile, homeimgalt, homeimgthumb, inhome, allowed_comm, allowed_rating, hitstotal, hitscm, total_rating, click_rating, cityid, districtid, wardid, years, full_name, telephone, email) VALUES
 				 (' . intval( $rowcontent['fid'] ) . ',
 				 :listfid,
@@ -562,9 +562,9 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 			if( $rowcontent['id'] > 0 )
 			{
 				
-				nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['genealogy_add'], $rowcontent['title'], $admin_info['userid'] );
+				nv_insert_logs( NV_LANG_DATA, $module_name, $nv_Lang->getModule('genealogy_add'), $rowcontent['title'], $admin_info['userid'] );
 				$ct_query = array();
-				$tbhtml = NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $rowcontent['id'] / 2000 );
+				$tbhtml = $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $rowcontent['id'] / 2000 );
 				$db->query( "CREATE TABLE IF NOT EXISTS " . $tbhtml . " (id int(11) unsigned NOT NULL, bodyhtml longtext NOT NULL, rule longtext NOT NULL, content longtext NOT NULL, imgposition tinyint(1) NOT NULL default '1', copyright tinyint(1) NOT NULL default '0', allowed_send tinyint(1) NOT NULL default '0', allowed_print tinyint(1) NOT NULL default '0', allowed_save tinyint(1) NOT NULL default '0', gid mediumint(9) NOT NULL DEFAULT '0', PRIMARY KEY (id)) ENGINE=MyISAM" );
 
 				$stmt = $db->prepare( 'INSERT INTO ' . $tbhtml . ' VALUES
@@ -586,10 +586,10 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 		
 				foreach( $fids as $fid )
 				{
-					$ct_query[] = ( int )$db->exec( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $rowcontent['id'] );
+					$ct_query[] = ( int )$db->exec( 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $rowcontent['id'] );
 				}
 
-				$stmt = $db->prepare( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_bodytext VALUES (' . $rowcontent['id'] . ', :bodytext, :ruletext, :contenttext )' );
+				$stmt = $db->prepare( 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodytext VALUES (' . $rowcontent['id'] . ', :bodytext, :ruletext, :contenttext )' );
 				$stmt->bindParam( ':bodytext', $rowcontent['bodytext'], PDO::PARAM_STR, strlen( $rowcontent['bodytext'] ) );
 				$stmt->bindParam( ':ruletext', $rowcontent['ruletext'], PDO::PARAM_STR, strlen( $rowcontent['ruletext'] ) );
 				$stmt->bindParam( ':contenttext', $rowcontent['contenttext'], PDO::PARAM_STR, strlen( $rowcontent['contenttext'] ) );
@@ -597,18 +597,18 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 		
 				if( array_sum( $ct_query ) != sizeof( $ct_query ) )
 				{
-					$error[] = $lang_module['errorsave'];
+					$error[] = $nv_Lang->getModule('errorsave');
 				}
 				unset( $ct_query );
 			}
 			else
 			{
-				$error[] = $lang_module['errorsave'];
+				$error[] = $nv_Lang->getModule('errorsave');
 			}
 		}
 		else
 		{
-			$rowcontent_old = $db->query( 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy where id=' . $rowcontent['id'] )->fetch();
+			$rowcontent_old = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy where id=' . $rowcontent['id'] )->fetch();
 			if( $rowcontent_old['status'] == 1 )
 			{
 				$rowcontent['status'] = 1;
@@ -622,7 +622,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 			{
 				$rowcontent['status'] = 2;
 			}
-			$sth = $db->prepare( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET
+			$sth = $db->prepare( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET
 					 fid=' . intval( $rowcontent['fid'] ) . ',
 					 listfid=:listfid,
 					 author=:author,
@@ -666,10 +666,10 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 			$sth->bindParam( ':email', $rowcontent['email'], PDO::PARAM_STR );
 			if( $sth->execute() )
 			{
-				nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['genealogy_edit'], $rowcontent['title'], $admin_info['userid'] );
+				nv_insert_logs( NV_LANG_DATA, $module_name, $nv_Lang->getModule('genealogy_edit'), $rowcontent['title'], $admin_info['userid'] );
 
 				$ct_query = array();
-				$sth = $db->prepare( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $rowcontent['id'] / 2000 ) . ' SET
+				$sth = $db->prepare( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $rowcontent['id'] / 2000 ) . ' SET
 					bodyhtml=:bodyhtml,
 					rule=:rule,
 					content=:content,
@@ -693,15 +693,15 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 				$array_fam_diff = array_diff( $array_fam_old, $array_fam_new );
 				foreach( $array_fam_diff as $fid )
 				{
-					$ct_query[] = $db->exec( 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE id = ' . $rowcontent['id'] );
+					$ct_query[] = $db->exec( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE id = ' . $rowcontent['id'] );
 				}
 				foreach( $array_fam_new as $fid )
 				{
-					$db->exec( 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE id = ' . $rowcontent['id'] );
-					$ct_query[] = $db->exec( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $rowcontent['id'] );
+					$db->exec( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE id = ' . $rowcontent['id'] );
+					$ct_query[] = $db->exec( 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $rowcontent['id'] );
 				}
 
-				$sth = $db->prepare( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bodytext SET bodytext=:bodytext, ruletext=:ruletext, contenttext=:contenttext WHERE id =' . $rowcontent['id'] );
+				$sth = $db->prepare( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodytext SET bodytext=:bodytext, ruletext=:ruletext, contenttext=:contenttext WHERE id =' . $rowcontent['id'] );
 				$sth->bindParam( ':bodytext', $rowcontent['bodytext'], PDO::PARAM_STR, strlen( $rowcontent['bodytext'] ) );
 				$sth->bindParam( ':ruletext', $rowcontent['ruletext'], PDO::PARAM_STR, strlen( $rowcontent['ruletext'] ) );
 				$sth->bindParam( ':contenttext', $rowcontent['contenttext'], PDO::PARAM_STR, strlen( $rowcontent['contenttext'] ) );
@@ -709,12 +709,12 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 
 				if( array_sum( $ct_query ) != sizeof( $ct_query ) )
 				{
-					$error[] = $lang_module['errorsave'];
+					$error[] = $nv_Lang->getModule('errorsave');
 				}
 			}
 			else
 			{
-				$error[] = $lang_module['errorsave'];
+				$error[] = $nv_Lang->getModule('errorsave');
 			}
 		}
 
@@ -736,7 +736,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 					{
 						$alias_i = ( $module_config[$module_name]['tags_alias'] ) ? change_alias( $keyword ) : str_replace( ' ', '-', $keyword );
 						$alias_i = nv_strtolower( $alias_i );
-						$sth = $db->prepare( 'SELECT tid, alias, description, keywords FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags where alias= :alias OR FIND_IN_SET(:keyword, keywords)>0' );
+						$sth = $db->prepare( 'SELECT tid, alias, description, keywords FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags where alias= :alias OR FIND_IN_SET(:keyword, keywords)>0' );
 						$sth->bindParam( ':alias', $alias_i, PDO::PARAM_STR );
 						$sth->bindParam( ':keyword', $keyword, PDO::PARAM_STR );
 						$sth->execute();
@@ -748,7 +748,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 							$array_insert['alias'] = $alias_i;
 							$array_insert['keyword'] = $keyword;
 
-							$tid = $db->insert_id( "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_tags (numnews, alias, description, image, keywords) VALUES (1, :alias, '', '', :keyword)", "tid", $array_insert );
+							$tid = $db->insert_id( "INSERT INTO " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_tags (numnews, alias, description, image, keywords) VALUES (1, :alias, '', '', :keyword)", "tid", $array_insert );
 						}
 						else
 						{
@@ -766,24 +766,24 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 								}
 								if( $keywords_i != $keywords_i2 )
 								{
-									$sth = $db->prepare( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_tags SET keywords= :keywords WHERE tid =' . $tid );
+									$sth = $db->prepare( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags SET keywords= :keywords WHERE tid =' . $tid );
 									$sth->bindParam( ':keywords', $keywords_i2, PDO::PARAM_STR );
 									$sth->execute();
 								}
 							}
-							$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_tags SET numnews = numnews+1 WHERE tid = ' . $tid );
+							$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags SET numnews = numnews+1 WHERE tid = ' . $tid );
 						}
 
 						// insert keyword for table _tags_id
 						try
 						{
-							$sth = $db->prepare( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id (id, tid, keyword) VALUES (' . $rowcontent['id'] . ', ' . intval( $tid ) . ', :keyword)' );
+							$sth = $db->prepare( 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id (id, tid, keyword) VALUES (' . $rowcontent['id'] . ', ' . intval( $tid ) . ', :keyword)' );
 							$sth->bindParam( ':keyword', $keyword, PDO::PARAM_STR );
 							$sth->execute();
 						}
 						catch( PDOException $e )
 						{
-							$sth = $db->prepare( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id SET keyword = :keyword WHERE id = ' . $rowcontent['id'] . ' AND tid=' . intval( $tid ) );
+							$sth = $db->prepare( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id SET keyword = :keyword WHERE id = ' . $rowcontent['id'] . ' AND tid=' . intval( $tid ) );
 							$sth->bindParam( ':keyword', $keyword, PDO::PARAM_STR );
 							$sth->execute();
 						}
@@ -795,8 +795,8 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 				{
 					if( ! in_array( $keyword, $keywords ) )
 					{
-						$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_tags SET numnews = numnews-1 WHERE tid = ' . $tid );
-						$db->query( 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id = ' . $rowcontent['id'] . ' AND tid=' . $tid );
+						$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags SET numnews = numnews-1 WHERE tid = ' . $tid );
+						$db->query( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id = ' . $rowcontent['id'] . ' AND tid=' . $tid );
 					}
 				}
 			}
@@ -809,8 +809,8 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 			else
 			{
 				$url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name;
-				$msg1 = $lang_module['content_saveok'];
-				$msg2 = $lang_module['content_main'] . ' ' . $module_info['custom_title'];
+				$msg1 = $nv_Lang->getModule('content_saveok');
+				$msg2 = $nv_Lang->getModule('content_main') . ' ' . $module_info['custom_title'];
 				redriect( $msg1, $msg2, $url, $module_data . '_bodyhtml' );
 			}
 		}
@@ -819,7 +819,7 @@ if( $nv_Request->get_int( 'save', 'post' ) == 1 )
 	{
 		$url = 'javascript: history.go(-1)';
 		$msg1 = implode( '<br />', $error );
-		$msg2 = $lang_module['content_back'];
+		$msg2 = $nv_Lang->getModule('content_back');
 		redriect( $msg1, $msg2, $url, $module_data . '_bodyhtml', 'back' );
 	}
 }
@@ -869,7 +869,7 @@ if( empty( $array_fam_check_content ) )
 {
 	$redirect = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=family';
 
-	$contents = '<p class="note_fam">' . $lang_module['note_fam'] . '</p>';
+	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_fam') . '</p>';
 	$contents .= "<meta http-equiv=\"refresh\" content=\"3;URL=" . $redirect . "\" />";
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
@@ -878,12 +878,12 @@ if( empty( $array_fam_check_content ) )
 }
 $contents = '';
 
-$lang_global['title_suggest_max'] = sprintf( $lang_global['length_suggest_max'], 65 );
-$lang_global['description_suggest_max'] = sprintf( $lang_global['length_suggest_max'], 160 );
+$lang_global['title_suggest_max'] = sprintf( $nv_Lang->getModule('length_suggest_max'), 65 );
+$lang_global['description_suggest_max'] = sprintf( $nv_Lang->getModule('length_suggest_max'), 160 );
 
 $xtpl = new XTemplate( 'genealogy.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file );
-$xtpl->assign( 'LANG', $lang_module );
-$xtpl->assign( 'GLANG', $lang_global );
+$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module);
+$xtpl->assign( 'GLANG', \NukeViet\Core\Language::$lang_global );
 $xtpl->assign( 'rowcontent', $rowcontent );
 $xtpl->assign( 'NV_BASE_ADMINURL', NV_BASE_ADMINURL );
 $xtpl->assign( 'NV_NAME_VARIABLE', NV_NAME_VARIABLE );
@@ -936,7 +936,7 @@ $xtpl->assign( 'checkcop', $checkcop );
 
 
 // position images
-while( list( $id_imgposition, $title_imgposition ) = each( $array_imgposition ) )
+foreach( $array_imgposition as $id_imgposition => $title_imgposition ) 
 {
 	$sl = ( $id_imgposition == $rowcontent['imgposition'] ) ? ' selected="selected"' : '';
 	$xtpl->assign( 'id_imgposition', $id_imgposition );

@@ -9,34 +9,25 @@
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
+
 
 $fid = $nv_Request->get_int( 'fid', 'post', 0 );
 $contents = "NO_" . $fid;
 
-list( $fid, $parentid, $title ) = $db->query( "SELECT fid, parentid, title FROM " . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid=" . intval( $fid ) )->fetch( 3 );
+list( $fid, $parentid, $title ) = $db->query( "SELECT fid, parentid, title FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid=" . intval( $fid ) )->fetch( 3 );
 if( $fid > 0 )
 {
 	if( ( defined( 'NV_IS_ADMIN_MODULE' ) or ( $parentid > 0 and isset( $array_fam_admin[$admin_id][$parentid] ) and $array_fam_admin[$admin_id][$parentid]['admin'] == 1 ) ) )
 	{
 		$delallcheckss = $nv_Request->get_string( 'delallcheckss', 'post', '' );
-		$check_parentid = $db->query( "SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_family WHERE parentid = '" . $fid . "'" )->fetchColumn();
+		$check_parentid = $db->query( "SELECT COUNT(*) FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family WHERE parentid = '" . $fid . "'" )->fetchColumn();
 		if( intval( $check_parentid ) > 0 )
 		{
 			$contents = "ERR_FAM_" . sprintf( $lang_module['delfam_msg_fam'], $check_parentid );
 		}
 		else
 		{
-			$check_rows = $db->query( "SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_" . $fid )->fetchColumn();
+			$check_rows = $db->query( "SELECT COUNT(*) FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fid )->fetchColumn();
 			if( intval( $check_rows ) > 0 )
 			{
 				if( $delallcheckss == md5( $fid . session_id() . $global_config['sitekey'] ) )
@@ -46,7 +37,7 @@ if( $fid > 0 )
 					$fidnews = $nv_Request->get_int( 'fidnews', 'post', 0 );
 					if( empty( $delfamandrows ) and empty( $movefam ) )
 					{
-						$sql = "SELECT fid, title, lev FROM " . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid !='" . $fid . "' ORDER BY sort ASC";
+						$sql = "SELECT fid, title, lev FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid !='" . $fid . "' ORDER BY sort ASC";
 						$result = $db->query( $sql );
 						$array_fam_list = array();
 						$array_fam_list[0] = "&nbsp;";
@@ -92,7 +83,7 @@ if( $fid > 0 )
 					{
 						nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['delfamandrows'], $title, $admin_info['userid'] );
 
-						$sql = $db->query( "SELECT id, fid, listfid FROM " . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
+						$sql = $db->query( "SELECT id, fid, listfid FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
 						while( $row = $sql->fetch() )
 						{
 							if( $row['fid'] == $row['listfid'] )
@@ -112,15 +103,15 @@ if( $fid > 0 )
 								{
 									if( isset($global_array_fam[$fid_i] ) )
 									{
-										$db->query( "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_" . $fid_i . " SET fid=" . $row['fid'] . ", listfid = '" . implode( ',', $arr_fid_news ) . "' WHERE id =" . $row['id'] );
+										$db->query( "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fid_i . " SET fid=" . $row['fid'] . ", listfid = '" . implode( ',', $arr_fid_news ) . "' WHERE id =" . $row['id'] );
 									}
 								}
-								$db->query( "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET fid=" . $row['fid'] . ", listfid = '" . implode( ',', $arr_fid_news ) . "' WHERE id =" . $row['id'] );
+								$db->query( "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET fid=" . $row['fid'] . ", listfid = '" . implode( ',', $arr_fid_news ) . "' WHERE id =" . $row['id'] );
 							}
 						}
-						$db->query( "DROP TABLE " . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
-						$db->query( "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid=" . $fid );
-						$db->query( "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE fid=" . $fid );
+						$db->query( "DROP TABLE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
+						$db->query( "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid=" . $fid );
+						$db->query( "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE fid=" . $fid );
 
 						nv_fix_fam_order();
 						nv_del_moduleCache( $module_name );
@@ -129,12 +120,12 @@ if( $fid > 0 )
 					}
 					elseif( ! empty( $movefam ) and $fidnews > 0 and $fidnews != $fid )
 					{
-						list( $fidnews, $newstitle ) = $db->query( "SELECT fid, title FROM " . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid =" . $fidnews )->fetch( 3 );
+						list( $fidnews, $newstitle ) = $db->query( "SELECT fid, title FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid =" . $fidnews )->fetch( 3 );
 						if( $fidnews > 0 )
 						{
 							nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['move'], $title . ' --> ' . $newstitle, $admin_info['userid'] );
 
-							$sql = $db->query( "SELECT id, fid, listfid FROM " . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
+							$sql = $db->query( "SELECT id, fid, listfid FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
 							while( $row = $sql->fetch() )
 							{
 								$arr_fid_old = explode( ',', $row['listfid'] );
@@ -144,7 +135,7 @@ if( $fid > 0 )
 								{
 									try
 									{
-										$db->query( "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_" . $fidnews . " SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $row['id'] );
+										$db->query( "INSERT INTO " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fidnews . " SELECT * FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $row['id'] );
 										$arr_fid_news[] = $fidnews;
 									}
 									catch( PDOException $e )
@@ -160,14 +151,14 @@ if( $fid > 0 )
 								{
 									if( isset($global_array_fam[$fid_i] ) )
 									{
-										$db->query( "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_" . $fid_i . " SET fid=" . $row['fid'] . ", listfid = '" . implode( ',', $arr_fid_news ) . "' WHERE id =" . $row['id'] );
+										$db->query( "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fid_i . " SET fid=" . $row['fid'] . ", listfid = '" . implode( ',', $arr_fid_news ) . "' WHERE id =" . $row['id'] );
 									}
 								}
-								$db->query( "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET fid=" . $row['fid'] . ", listfid = '" . implode( ',', $arr_fid_news ) . "' WHERE id =" . $row['id'] );
+								$db->query( "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET fid=" . $row['fid'] . ", listfid = '" . implode( ',', $arr_fid_news ) . "' WHERE id =" . $row['id'] );
 							}
-							$db->query( "DROP TABLE " . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
-							$db->query( "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid=" . $fid );
-							$db->query( "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE fid=" . $fid );
+							$db->query( "DROP TABLE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
+							$db->query( "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid=" . $fid );
+							$db->query( "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE fid=" . $fid );
 
 							nv_fix_fam_order();
 							nv_del_moduleCache( $module_name );
@@ -186,15 +177,15 @@ if( $fid > 0 )
 		{
 			if( $delallcheckss == md5( $fid . session_id() ) )
 			{
-				$sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid=" . $fid;
+				$sql = "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family WHERE fid=" . $fid;
 				if( $db->exec( $sql ) )
 				{
 					nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['delfamandrows'], $title, $admin_info['userid'] );
 					nv_fix_fam_order();
-					$db->query( "DROP TABLE " . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
+					$db->query( "DROP TABLE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_" . $fid );
 					$contents = "OK_" . $parentid;
 				}
-				$db->query( "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE fid=" . $fid );
+				$db->query( "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE fid=" . $fid );
 				nv_del_moduleCache( $module_name );
 			}
 			else

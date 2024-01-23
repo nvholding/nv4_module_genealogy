@@ -9,16 +9,7 @@
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
+
 
 $id = $nv_Request->get_int( 'id', 'post', 0 );
 $checkss = $nv_Request->get_string( 'checkss', 'post', '' );
@@ -35,7 +26,7 @@ elseif( md5( $id . session_id() ) == $checkss )
 }
 if( ! empty( $del_array ) )
 {
-	$sql = 'SELECT id, listfid, admin_id, title, alias, status FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id IN (' . implode( ',', $del_array ) . ')';
+	$sql = 'SELECT id, listfid, admin_id, title, alias, status FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id IN (' . implode( ',', $del_array ) . ')';
 	$result = $db->query( $sql );
 	$del_array = $no_del_array = array();
 	$artitle = array();
@@ -95,7 +86,7 @@ if( ! empty( $del_array ) )
 	$count = sizeof( $del_array );
 	if( $count )
 	{
-		nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['permissions_del_content'], implode( ', ', $artitle ), $admin_info['userid'] );
+		nv_insert_logs( NV_LANG_DATA, $module_name, $nv_Lang->getModule('permissions_del_content'), implode( ', ', $artitle ), $admin_info['userid'] );
 	}
 	if( ! empty( $no_del_array ) )
 	{

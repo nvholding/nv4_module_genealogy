@@ -43,7 +43,7 @@ require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 global $global_array_fam;
 $global_array_fam = array();
 $link_i = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=Other';
-$global_array_fam[0] = array(
+/* $global_array_fam[0] = array(
 	'fid' => 0,
 	'parentid' => 0,
 	'title' => 'Other',
@@ -58,7 +58,7 @@ $global_array_fam[0] = array(
 	'inhome' => 0,
 	'keywords' => '',
 	'groups_view'=>0
-);
+); */
 $fid = 0;
 $parentid = 0;
 if($op == 'main'){

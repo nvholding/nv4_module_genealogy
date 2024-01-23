@@ -9,23 +9,14 @@
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
+
 
 $q = $nv_Request->get_title( 'term', 'get', '', 1 );
 if( empty( $q ) ) return;
 
 $db->sqlreset()
 	->select('keywords')
-	->from( NV_PREFIXLANG . '_' . $module_data . '_tags')
+	->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags')
 	->where( 'alias LIKE :alias OR keywords LIKE :keywords' )
 	->order( 'alias ASC' )
 	->limit( 50 );

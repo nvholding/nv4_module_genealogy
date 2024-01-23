@@ -9,15 +9,7 @@
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
+
 //die($module_info['alias']['location']);
 $show_no_image = $module_config[$module_name]['show_no_image'];
 if( isset( $array_op[1] ) )
@@ -47,7 +39,7 @@ if( isset( $array_op[1] ) )
 
 		$db->sqlreset()
 			->select( '*' )
-			->from( NV_PREFIXLANG . '_' . $module_data . '_genealogy ' )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy ' )
 			->where( 'cityid= ' . $cityid . ' AND status= 1' );
 		$num_items = $db->query( $db->sql() );
 		$db->select( 'id, fid, admin_id, author, patriarch, addtime, edittime, publtime, title, alias, hometext, homeimgfile, homeimgalt, homeimgthumb, allowed_rating, hitstotal, hitscm, total_rating, click_rating, years, number' )
@@ -55,7 +47,7 @@ if( isset( $array_op[1] ) )
 		$result = $db->query( $db->sql() );
 		while( $item = $result->fetch() )
 		{
-			$sqllistuser = $db->sqlreset()->query( 'SELECT max(lev) as maxlev FROM ' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $item['id'] . '" ORDER BY weight ASC' )->fetch();
+			$sqllistuser = $db->sqlreset()->query( 'SELECT max(lev) as maxlev FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $item['id'] . '" ORDER BY weight ASC' )->fetch();
 			$item['maxlev']=$sqllistuser['maxlev'];
 			//die($item['id']);	
 			if( $item['homeimgthumb'] == 1 )//image thumb

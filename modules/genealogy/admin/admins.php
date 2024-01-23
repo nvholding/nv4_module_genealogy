@@ -11,7 +11,7 @@
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
 if( ! defined( 'NV_MODULE_LOCATION' ) ){
 	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+	$contents = '<p class="note_fam">' . \NukeViet\Core\Language::$lang_module['note_location'] . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
@@ -24,9 +24,9 @@ if( ! function_exists( 'nv_array_fam_admin' ) )
 {
 	function nv_array_fam_admin()
 	{
-		global $db, $module_data;
+		global $db, $db_config, $module_data;
 		$array_fam_admin = array();
-		$sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_admins ORDER BY userid ASC';
+		$sql = 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_admins ORDER BY userid ASC';
 		$result = $db->query( $sql );
 		while( $row = $result->fetch() )
 		{
@@ -45,7 +45,7 @@ foreach( $array_fam_admin as $userid_i => $value )
 {
 	if( ! in_array( $userid_i, $module_admin ) )
 	{
-		$db->query( "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE userid = " . $userid_i );
+		$db->query( "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE userid = " . $userid_i );
 		$is_refresh = true;
 	}
 }
@@ -55,7 +55,7 @@ foreach( $array_fam_admin as $userid_i => $value )
 if( empty( $module_info['admins'] ) )
 {
 	// Thong bao khong co nguoi dieu hanh chung
-	$contents = "<br /><br /><br /><center><b>" . $lang_module['admin_no_user'] . "</b></center><br /><br /><br />";
+	$contents = "<br /><br /><br /><center><b>" . \NukeViet\Core\Language::$lang_module['admin_no_user'] . "</b></center><br /><br /><br />";
 }
 
 foreach( $module_admin as $userid_i )
@@ -64,11 +64,11 @@ foreach( $module_admin as $userid_i )
 	if( $userid_i > 0 && ! isset( $array_fam_admin[$userid_i] ) )
 	{
 		// Them nguoi dieu hanh chung, voi quyen han Quan ly module
-		$sql = "SELECT userid FROM " . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE userid=" . $userid_i . " AND fid=0";
+		$sql = "SELECT userid FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE userid=" . $userid_i . " AND fid=0";
 		$numrows = $db->query( $sql )->fetchColumn();
 		if( $numrows == 0 )
 		{
-			$db->query( "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content, app_content) VALUES ('" . $userid_i . "', '0', '1', '1', '1', '1', '1', '1')" );
+			$db->query( "INSERT INTO " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content, app_content) VALUES ('" . $userid_i . "', '0', '1', '1', '1', '1', '1', '1')" );
 			$is_refresh = true;
 		}
 	}
@@ -95,9 +95,9 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 	$userid = $nv_Request->get_int( 'userid', 'get', 0 );
 
 	$array_permissions_mod = array(
-		$lang_module['admin_fam'],
-		$lang_module['admin_module'],
-		$lang_module['admin_full_module'] );
+		\NukeViet\Core\Language::$lang_module['admin_fam'],
+		\NukeViet\Core\Language::$lang_module['admin_module'],
+		\NukeViet\Core\Language::$lang_module['admin_full_module'] );
 
 	if( $nv_Request->isset_request( "submit", "post" ) and $userid > 0 )
 	{
@@ -109,12 +109,12 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 			{
 				$admin_module = 1;
 			}
-			$db->query( "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE userid = " . $userid );
-			$db->query( "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content, app_content) VALUES ('" . $userid . "', '0', '" . $admin_module . "', '1', '1', '1', '1', '1')" );
+			$db->query( "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE userid = " . $userid );
+			$db->query( "INSERT INTO " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content, app_content) VALUES ('" . $userid . "', '0', '" . $admin_module . "', '1', '1', '1', '1', '1')" );
 		}
 		else
 		{
-			$db->query( "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE userid = " . $userid );
+			$db->query( "DELETE FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins WHERE userid = " . $userid );
 			$array_admin =  $nv_Request->get_typed_array( 'admin_content', 'post', 'int', array() );
 			$array_add_content =  $nv_Request->get_typed_array( 'add_content', 'post', 'int', array() );
 			$array_pub_content =  $nv_Request->get_typed_array( 'pub_content', 'post', 'int', array() );
@@ -122,7 +122,7 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 			$array_del_content =  $nv_Request->get_typed_array( 'del_content', 'post', 'int', array() );
             $array_app_content =  $nv_Request->get_typed_array( 'app_content', 'post', 'int', array() );
 
-			$sql = "SELECT fid, title, subfid FROM " . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY sort ASC";
+			$sql = "SELECT fid, title, subfid FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY sort ASC";
 			$result_fam = $db->query( $sql );
 			while( $row = $result_fam->fetch() )
 			{
@@ -159,7 +159,7 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 						}
 					}
 				}
-                $db->query( "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content, app_content) VALUES ('" . $userid . "', '" . $row['fid'] . "', '" . $admin_i . "', '" . $add_content_i . "', '" . $pub_content_i . "', '" . $edit_content_i . "', '" . $del_content_i . "', '" . $app_content_i . "')" );
+                $db->query( "INSERT INTO " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content, app_content) VALUES ('" . $userid . "', '" . $row['fid'] . "', '" . $admin_i . "', '" . $add_content_i . "', '" . $pub_content_i . "', '" . $edit_content_i . "', '" . $del_content_i . "', '" . $app_content_i . "')" );
 			}
 		}
 		$base_url = str_replace( "&amp;", "&", $base_url ) . "&userid=" . $userid;
@@ -201,13 +201,13 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 	if( ! empty( $users_list ) )
 	{
 		$head_tds = array();
-		$head_tds['userid']['title'] = $lang_module['admin_userid'];
+		$head_tds['userid']['title'] = \NukeViet\Core\Language::$lang_module['admin_userid'];
 		$head_tds['userid']['href'] = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=" . $op . "&amp;sortby=userid&amp;sorttype=ASC";
-		$head_tds['username']['title'] = $lang_module['admin_username'];
+		$head_tds['username']['title'] = \NukeViet\Core\Language::$lang_module['admin_username'];
 		$head_tds['username']['href'] = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=" . $op . "&amp;sortby=username&amp;sorttype=ASC";
-		$head_tds['full_name']['title'] = $global_config['name_show'] == 0 ? $lang_module['lastname_firstname'] : $lang_module['firstname_lastname'];
+		$head_tds['full_name']['title'] = $global_config['name_show'] == 0 ? \NukeViet\Core\Language::$lang_module['lastname_firstname'] : \NukeViet\Core\Language::$lang_module['firstname_lastname'];
 		$head_tds['full_name']['href'] = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=" . $op . "&amp;sortby=full_name&amp;sorttype=ASC";
-		$head_tds['email']['title'] = $lang_module['admin_email'];
+		$head_tds['email']['title'] = \NukeViet\Core\Language::$lang_module['admin_email'];
 		$head_tds['email']['href'] = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=" . $op . "&amp;sortby=email&amp;sorttype=ASC";
 
 		foreach( $orders as $order )
@@ -225,7 +225,7 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 		}
 
 		$xtpl = new XTemplate( "admin.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file );
-		$xtpl->assign( 'LANG', $lang_module );
+		$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
 		foreach( $head_tds as $head_td )
 		{
 			$xtpl->assign( 'HEAD_TD', $head_td );
@@ -271,7 +271,7 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 				}
 
 
-				$sql = "SELECT fid, title, lev FROM " . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY sort ASC";
+				$sql = "SELECT fid, title, lev FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY sort ASC";
 				if( $db->query( $sql )->fetchColumn() == 0 )
 				{
 
@@ -305,7 +305,7 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 					$xtpl->parse( 'main.edit.fid' );
 				}
 
-				$xtpl->assign( 'CAPTION_EDIT', $lang_module['admin_edit_user'] . ": " . $users_list[$userid]['username'] );
+				$xtpl->assign( 'CAPTION_EDIT', \NukeViet\Core\Language::$lang_module['admin_edit_user'] . ": " . $users_list[$userid]['username'] );
 				$xtpl->parse( 'main.edit' );
 			}
 		}
@@ -316,11 +316,11 @@ if( defined( 'NV_IS_ADMIN_FULL_MODULE' ) )
 }
 elseif( defined( 'NV_IS_ADMIN_MODULE' ) )
 {
-	$contents = "<br /><br /><br /><center><b>" . $lang_module['admin_module_for_user'] . "</b></center><br /><br /><br />";
+	$contents = "<br /><br /><br /><center><b>" . \NukeViet\Core\Language::$lang_module['admin_module_for_user'] . "</b></center><br /><br /><br />";
 }
 else
 {
-	$sql = "SELECT fid, title, lev FROM " . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY sort ASC";
+	$sql = "SELECT fid, title, lev FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY sort ASC";
 
 	if( $db->query( $sql )->fetchColumn() == 0 )
 	{
@@ -328,8 +328,8 @@ else
 		die();
 	}
 	$xtpl = new XTemplate( "admin.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
-	$xtpl->assign( 'CAPTION_EDIT', $lang_module['admin_fam_for_user'] );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
+	$xtpl->assign( 'CAPTION_EDIT', \NukeViet\Core\Language::$lang_module['admin_fam_for_user'] );
 
     $result_fam = $db->query( $sql );
 	while( $row = $result_fam->fetch() )
@@ -390,7 +390,7 @@ else
 	$contents = $xtpl->text( 'view_user' );
 }
 
-$page_title = $lang_module['admin'];
+$page_title = \NukeViet\Core\Language::$lang_module['admin'];
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_admin_theme( $contents );
 include NV_ROOTDIR . '/includes/footer.php';

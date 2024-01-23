@@ -193,8 +193,8 @@ function nv_show_fam_list( $parentid = 0 )
 	$num = sizeof( $rowall );
 	$a = 1;
 	$array_inhome = array(
-		$lang_global['no'],
-		$lang_global['yes']
+		\NukeViet\Core\Language::$lang_global['no'],
+		\NukeViet\Core\Language::$lang_global['yes']
 	);
 
 	foreach ($rowall as $row)
@@ -236,7 +236,7 @@ function nv_show_fam_list( $parentid = 0 )
 			if( defined( 'NV_IS_ADMIN_MODULE' ) or ($parentid > 0 and isset( $array_fam_admin[$admin_id][$parentid] ) and $array_fam_admin[$admin_id][$parentid]['admin'] == 1) )
 			{
 				$weight_disabled = false;
-				$admin_funcs[] = "<em class=\"fa fa-trash-o fa-lg\">&nbsp;</em> <a href=\"javascript:void(0);\" onclick=\"nv_del_fam(" . $fid . ")\">" . $lang_global['delete'] . "</a>";
+				$admin_funcs[] = "<em class=\"fa fa-trash-o fa-lg\">&nbsp;</em> <a href=\"javascript:void(0);\" onclick=\"nv_del_fam(" . $fid . ")\">" . \NukeViet\Core\Language::$lang_global['delete'] . "</a>";
 			}
 
 			$xtpl->assign( 'ROW', array(

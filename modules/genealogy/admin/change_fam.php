@@ -9,28 +9,19 @@
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
+
 
 $fid = $nv_Request->get_int( 'fid', 'post', 0 );
 $mod = $nv_Request->get_string( 'mod', 'post', '' );
 $new_vid = $nv_Request->get_int( 'new_vid', 'post', 0 );
 $content = 'NO_' . $fid;
 
-list( $fid, $parentid, $numsubfam ) = $db->query( 'SELECT fid, parentid, numsubfam FROM ' . NV_PREFIXLANG . '_' . $module_data . '_family WHERE fid=' . $fid  )->fetch( 3 );
+list( $fid, $parentid, $numsubfam ) = $db->query( 'SELECT fid, parentid, numsubfam FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family WHERE fid=' . $fid  )->fetch( 3 );
 if( $fid > 0 )
 {
 	if( $mod == 'weight' and $new_vid > 0 and ( defined( 'NV_IS_ADMIN_MODULE' ) or ( $parentid > 0 and isset( $array_fam_admin[$admin_id][$parentid] ) and $array_fam_admin[$admin_id][$parentid]['admin'] == 1 ) ) )
 	{
-		$sql = 'SELECT fid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_family WHERE fid!=' . $fid . ' AND parentid=' . $parentid . ' ORDER BY weight ASC';
+		$sql = 'SELECT fid FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family WHERE fid!=' . $fid . ' AND parentid=' . $parentid . ' ORDER BY weight ASC';
 		$result = $db->query( $sql );
 
 		$weight = 0;
@@ -38,11 +29,11 @@ if( $fid > 0 )
 		{
 			++$weight;
 			if( $weight == $new_vid ) ++$weight;
-			$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_family SET weight=' . $weight . ' WHERE fid=' . $row['fid'];
+			$sql = 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family SET weight=' . $weight . ' WHERE fid=' . $row['fid'];
 			$db->query( $sql );
 		}
 
-		$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_family SET weight=' . $new_vid . ' WHERE fid=' . $fid ;
+		$sql = 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family SET weight=' . $new_vid . ' WHERE fid=' . $fid ;
 		$db->query( $sql );
 
 		nv_fix_fam_order();
@@ -52,19 +43,19 @@ if( $fid > 0 )
 	{
 		if( $mod == 'inhome' and ( $new_vid == 0 or $new_vid == 1 ) )
 		{
-			$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_family SET inhome=' . $new_vid . ' WHERE fid=' . $fid ;
+			$sql = 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family SET inhome=' . $new_vid . ' WHERE fid=' . $fid ;
 			$db->query( $sql );
 			$content = 'OK_' . $parentid;
 		}
 		elseif( $mod == 'numlinks' and $new_vid >= 0 and $new_vid <= 20 )
 		{
-			$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_family SET numlinks=' . $new_vid . ' WHERE fid=' . $fid ;
+			$sql = 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family SET numlinks=' . $new_vid . ' WHERE fid=' . $fid ;
 			$db->query( $sql );
 			$content = 'OK_' . $parentid;
 		}
 		elseif( $mod == 'newday' and $new_vid >= 0 and $new_vid <= 10 )
 		{
-			$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_family SET newday=' . $new_vid . ' WHERE fid=' . $fid ;
+			$sql = 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family SET newday=' . $new_vid . ' WHERE fid=' . $fid ;
 			$db->query( $sql );
 			$content = 'OK_' . $parentid;
 		}
@@ -76,7 +67,7 @@ if( $fid > 0 )
 			{
 				$viewfam = 'viewfam_page_new';
 			}
-			$stmt = $db->prepare( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_family SET viewfam= :viewfam WHERE fid=' . $fid  );
+			$stmt = $db->prepare( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family SET viewfam= :viewfam WHERE fid=' . $fid  );
 			$stmt->bindParam( ':viewfam', $viewfam, PDO::PARAM_STR );
 			$stmt->execute();
 			$content = 'OK_' . $parentid;

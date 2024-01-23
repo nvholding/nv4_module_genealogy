@@ -9,16 +9,7 @@
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
+
 
 if( $nv_Request->isset_request( 'checkss', 'get' ) and $nv_Request->get_string( 'checkss', 'get' ) == md5( $global_config['sitekey'] . session_id() ) )
 {
@@ -27,7 +18,7 @@ if( $nv_Request->isset_request( 'checkss', 'get' ) and $nv_Request->get_string( 
 
 	$publ_array = array();
 
-	$sql = 'SELECT id, listfid, status, publtime, exptime FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id in (' . implode( ',', $id_array ) . ')';
+	$sql = 'SELECT id, listfid, status, publtime, exptime FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id in (' . implode( ',', $id_array ) . ')';
 	$result = $db->query( $sql );
 	while( list( $id, $listfid, $status, $publtime, $exptime ) = $result->fetch( 3 ) )
 	{
@@ -78,10 +69,10 @@ if( $nv_Request->isset_request( 'checkss', 'get' ) and $nv_Request->get_string( 
 					$s_ud .= $key . " = '" . $value . "', ";
 				}
 				$s_ud .= "edittime = '" . NV_CURRENTTIME . "'";
-				$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET ' . $s_ud . ' WHERE id =' . $id );
+				$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET ' . $s_ud . ' WHERE id =' . $id );
 				foreach( $arr_fid as $fid_i )
 				{
-					$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SET ' . $s_ud . ' WHERE id =' . $id );
+					$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SET ' . $s_ud . ' WHERE id =' . $id );
 				}
 				$publ_array[] = $id;
 			}

@@ -10,17 +10,7 @@
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
 
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
-$page_title = $lang_module['genealogy_list'];
+$page_title = $nv_Lang->getModule('genealogy_list');
 $stype = $nv_Request->get_string( 'stype', 'get', '-' );
 $sstatus = $nv_Request->get_int( 'sstatus', 'get', -1 );
 $fid = $nv_Request->get_int( 'fid', 'get', 0 );
@@ -45,7 +35,7 @@ $val_fam_content = array();
 $val_fam_content[] = array(
 	'value' => 0,
 	'selected' => ( $fid == 0 ) ? ' selected="selected"' : '',
-	'title' => $lang_module['search_fam_all']
+	'title' => $nv_Lang->getModule('search_fam_all')
 );
 $array_fam_view = array();
 $check_declined = false;
@@ -59,7 +49,7 @@ foreach( $global_array_fam as $fid_i => $array_value )
 	}
 	elseif( isset( $array_fam_admin[$admin_id][$fid_i] ) )
 	{
-		$_fam_admin_i = $array_fam_admin[$admin_id][$fid_i];
+	$_fam_admin_i = $array_fam_admin[$admin_id][$fid_i];
 		if( $_fam_admin_i['admin'] == 1 )
 		{
 			$check_fam = true;
@@ -116,11 +106,11 @@ if( ! defined( 'NV_IS_ADMIN_MODULE' ) and $fid > 0 and !in_array( $fid, $array_f
 	die();
 }
 $array_search = array(
-	'-' => '---' . $lang_module['search_type'] . '---',
-	'title' => $lang_module['search_title'],
-	'bodytext' => $lang_module['search_bodytext'],
-	'author' => $lang_module['search_author'],
-	'admin_id' => $lang_module['search_admin'],
+	'-' => '---' . $nv_Lang->getModule('search_type') . '---',
+	'title' => $nv_Lang->getModule('search_title'),
+	'bodytext' => $nv_Lang->getModule('search_bodytext'),
+	'author' => $nv_Lang->getModule('search_author'),
+	'admin_id' => $nv_Lang->getModule('search_admin'),
 );
 $array_in_rows = array(
 	'title',
@@ -135,14 +125,14 @@ $array_in_ordername = array(
 	'hitscm'
 );
 $array_status_view = array(
-	'-' => '---' . $lang_module['search_status'] . '---',
-	'5' => $lang_module['status_5'],
-	'1' => $lang_module['status_1'],
-	'0' => $lang_module['status_0'],
-	'6' => $lang_module['status_6'],
-	'4' => $lang_module['status_4'],
-	'2' => $lang_module['status_2'],
-	'3' => $lang_module['status_3']
+	'-' => '---' . $nv_Lang->getModule('search_status') . '---',
+	'5' => $nv_Lang->getModule('status_5'),
+	'1' => $nv_Lang->getModule('status_1'),
+	'0' => $nv_Lang->getModule('status_0'),
+	'6' => $nv_Lang->getModule('status_6'),
+	'4' => $nv_Lang->getModule('status_4'),
+	'2' => $nv_Lang->getModule('status_2'),
+	'3' => $nv_Lang->getModule('status_3')
 );
 $array_status_class = array(
 	'5' => 'danger',
@@ -156,22 +146,22 @@ $array_status_class = array(
 
 $_permission_action = array();
 $array_list_action = array(
-	'delete' => $lang_global['delete'],
-	're-published' => $lang_module['re_published'],
-	'publtime' => $lang_module['publtime'],
-	'stop' => $lang_module['status_0'],
-	'waiting' => $lang_module['status_action_0']
+	'delete' => $nv_Lang->getModule('delete'),
+	're-published' => $nv_Lang->getModule('re_published'),
+	'publtime' => $nv_Lang->getModule('publtime'),
+	'stop' => $nv_Lang->getModule('status_0'),
+	'waiting' => $nv_Lang->getModule('status_action_0')
 );
 
 // Chuyen sang cho duyet
 if( defined( 'NV_IS_ADMIN_MODULE' ) )
 {
-	$array_list_action['declined'] = $lang_module['declined'];
-	$array_list_action['move'] = $lang_module['move'];
+	$array_list_action['declined'] = $nv_Lang->getModule('declined');
+	$array_list_action['move'] = $nv_Lang->getModule('move');
 }
 elseif( $check_declined ) //Neu co quyen duyet bai thi
 {
-	$array_list_action['declined'] = $lang_module['declined'];
+	$array_list_action['declined'] = $nv_Lang->getModule('declined');
 }
 
 if( ! in_array( $stype, array_keys( $array_search ) ) )
@@ -188,11 +178,11 @@ if( ! in_array( $ordername, array_keys( $array_in_ordername ) ) )
 }
 if( $fid == 0 )
 {
-	$from = NV_PREFIXLANG . '_' . $module_data . '_genealogy r';
+	$from = $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy r';
 }
 else
 {
-	$from = NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' r';
+	$from = $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' r';
 }
 $where = '';
 $page = $nv_Request->get_int( 'page', 'get', 1 );
@@ -201,7 +191,7 @@ if( $checkss == md5( session_id() ) )
 {
 	if( $stype == 'bodytext' )
 	{
-		$from .= ' INNER JOIN ' . NV_PREFIXLANG . '_' . $module_data . '_bodytext c ON (r.id=c.id)';
+		$from .= ' INNER JOIN ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodytext c ON (r.id=c.id)';
 		$where = " c.bodytext LIKE '%" . $db->dblikeescape( $q ) . "%'";
 	}
 	elseif( $stype == "author" or $stype == "title" )
@@ -214,7 +204,7 @@ if( $checkss == md5( session_id() ) )
 	}
 	elseif( ! empty( $q ) )
 	{
-		$from .= ' INNER JOIN ' . NV_PREFIXLANG . '_' . $module_data . '_bodytext c ON (r.id=c.id)';
+		$from .= ' INNER JOIN ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodytext c ON (r.id=c.id)';
 		$arr_from = array();
 		foreach( $array_in_rows as $key => $val )
 		{
@@ -279,7 +269,7 @@ for ($i=0; $i  <= 10; $i++)
 	$sl = ( $i == $sstatus ) ? ' selected="selected"' : '';
 	$search_status[] = array(
 		'key' => $i,
-		'value' => $lang_module['status_' . $i],
+		'value' => $nv_Lang->getModule('status_' . $i),
 		'selected' => $sl
 	);
 }
@@ -400,7 +390,7 @@ while( list( $id, $fid_i, $listfid, $post_id, $author, $title, $alias, $status, 
 		'link' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$fid_i]['alias'] . '/' . $alias . $global_config['rewrite_exturl'],
 		'title' => $title,
 		'publtime' => $publtime,
-		'status' => $lang_module['status_' . $status],
+		'status' => $nv_Lang->getModule('status_' . $status),
 		'class' => $array_status_class[$status],
 		'author' => $author,
 		'username' => $username,
@@ -416,7 +406,7 @@ while( list( $id, $fid_i, $listfid, $post_id, $author, $title, $alias, $status, 
 // Lay so tags
 if( ! empty( $array_ids ) )
 {
-	$db->sqlreset()->select( 'COUNT(*) AS numtags, id' )->from( NV_PREFIXLANG . '_' . $module_data . '_tags_id' )->where( 'id IN( ' . implode( ',', $array_ids ) . ' )' )->group( 'id' );
+	$db->sqlreset()->select( 'COUNT(*) AS numtags, id' )->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id' )->where( 'id IN( ' . implode( ',', $array_ids ) . ' )' )->group( 'id' );
 	$result = $db->query( $db->sql() );
 
 	while( list( $numtags, $id ) = $result->fetch( 3 ) )
@@ -482,8 +472,7 @@ foreach( $data as $row )
 	$xtpl->assign( 'ROW', $row );
 	$xtpl->parse( 'main.loop' );
 }
-
-while( list( $action_i, $title_i ) = each( $array_list_action ) )
+foreach( $array_list_action as $action_i => $title_i ) 
 {
 	if( defined( 'NV_IS_ADMIN_MODULE' ) || isset( $_permission_action[$action_i] ) )
 	{

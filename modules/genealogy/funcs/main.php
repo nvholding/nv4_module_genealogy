@@ -9,15 +9,7 @@
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
-/* if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_site_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-} */
+
 	
 	
 $page_title = $module_info['custom_title'];
@@ -60,7 +52,7 @@ if( empty( $contents ) )
 		$order_by = ( $viewfam == 'viewfam_page_new' ) ? 'publtime DESC' : 'publtime ASC';
 		$db->sqlreset()
 			->select( 'COUNT(*)' )
-			->from( NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
 			->where( 'status= 1 AND inhome=1' );
 
 		$num_items = $db->query( $db->sql() )->fetchColumn();
@@ -106,7 +98,7 @@ if( empty( $contents ) )
 		{
 			$db->sqlreset()
 				->select('id, fid, addtime, edittime, publtime, title, alias, hitstotal')
-				->from( NV_PREFIXLANG . '_' . $module_data . '_genealogy' );
+				->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy' );
 
 			if( $viewfam == 'viewfam_page_new' )
 			{
@@ -137,7 +129,7 @@ if( empty( $contents ) )
 
 		$db->sqlreset()
 			->select( 'COUNT(*) ')
-			->from( NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
 			->where( 'status= 1 AND inhome=1' );
 
 		$num_items = $db->query( $db->sql() )->fetchColumn();
@@ -185,7 +177,7 @@ if( empty( $contents ) )
 		foreach( $global_array_location_city as $city_i =>  $rowscity ){
 			$db->sqlreset()
 			->select( 'COUNT(*) ')
-			->from( NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
 			->where( 'status= 1 and districtid = ' . $city_i);
 			$num_items = $db->query( $db->sql() )->fetchColumn();
 			$array_fampage[$city_i]['link']=NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $module_info['alias']['location'] . '/' . $rowscity['alias'];
@@ -201,7 +193,7 @@ if( empty( $contents ) )
 		foreach( $global_array_location_city as $city_i =>  $rowscity ){
 			$db->sqlreset()
 			->select( 'COUNT(*) ')
-			->from( NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
 			->where( 'status= 1 ');
 			$num_items = $db->query( $db->sql() )->fetchColumn();
 			$array_fampage[$city_i]['link']=NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $module_info['alias']['location'] . '/' . $rowscity['alias'];

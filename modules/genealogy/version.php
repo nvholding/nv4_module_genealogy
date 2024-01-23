@@ -12,9 +12,9 @@ if( ! defined( 'NV_ADMIN' ) or ! defined( 'NV_MAINFILE' ) ) die( 'Stop!!!' );
 
 $module_version = array(
 	'name' => 'Genealogy', // Tieu de module
-	'modfuncs' => 'main,viewfam,location,location_ajax,family,groups,detail,search,content,tag,rss,manager,users,shows,creategenealogy,view', // Cac function co block
-	'change_alias' => 'groups,content,rss,location,family,location_ajax',
-	'submenu' => 'content,rss,search,location,family',
+	'modfuncs' => 'main,viewfam,location,location_ajax,family,groups,detail,search,content,tag,rss,manager,users,member,shows,creategenealogy,view,creategroup', // Cac function co block
+	'change_alias' => 'groups,content,rss,location,family,location_ajax,member',
+	'submenu' => 'content,rss,search,location,family,member,manager,creategenealogy,creategroup',
 	'is_sysmod' => 0, // 1:0 => Co phai la module he thong hay khong
 	'virtual' => 1, // 1:0 => Co cho phep ao hao module hay khong
 	'version' => '5.0.0', // Phien ban cua modle

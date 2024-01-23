@@ -9,25 +9,18 @@
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
-/* if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-} */
-if (defined('NV_IS_USER'))
+
+if (defined('NV_IS_USER') OR defined('NV_IS_ADMIN'))
 {
+	define( 'NV_EDITOR', true );
+	define( 'NV_IS_CKEDITOR', true );
 	if( defined( 'NV_EDITOR' ) )
 	{
 		require_once NV_ROOTDIR . '/' . NV_EDITORSDIR . '/' . NV_EDITOR . '/nv.php';
 	}
 	elseif( ! nv_function_exists( 'nv_aleditor' ) and file_exists( NV_ROOTDIR . '/' . NV_EDITORSDIR . '/ckeditor/ckeditor.js' ) )
 	{
-		define( 'NV_EDITOR', true );
-		define( 'NV_IS_CKEDITOR', true );
+		
 		$my_head .= '<script type="text/javascript" src="' . NV_BASE_SITEURL . NV_EDITORSDIR . '/ckeditor/ckeditor.js"></script>';
 
 		function nv_aleditor( $textareaname, $width = '100%', $height = '450px', $val = '', $customtoolbar = '' )
@@ -48,7 +41,7 @@ if (defined('NV_IS_USER'))
     $post['id'] = $nv_Request->get_int('id', 'post,get', 0);
     if (!empty($post['id']))
     {
-        $post_old = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $post['id'])->fetch();
+        $post_old = $db->query("SELECT * FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $post['id'])->fetch();
         $post['gid'] = $post_old['gid'];
     }
     else
@@ -56,7 +49,7 @@ if (defined('NV_IS_USER'))
         $post['gid'] = $nv_Request->get_int('gid', 'post,get', 0);
     }
 	
-    $post_gid = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $post['gid'])->fetch();
+    $post_gid = $db->query("SELECT * FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $post['gid'])->fetch();
 	
     if (defined( 'NV_IS_ADMIN' ) or empty($post_gid)  or $post_gid['admin_id'] != $user_info['userid'])
     {
@@ -127,7 +120,7 @@ if (defined('NV_IS_USER'))
         {
             if ($post['parentid'])
             {
-                list($lev) = $db->query("SELECT lev FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $post['parentid'])->fetch(3);
+                list($lev) = $db->query("SELECT lev FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $post['parentid'])->fetch(3);
                 $post['lev'] = intval($lev) + 1;
             }
             else
@@ -136,7 +129,7 @@ if (defined('NV_IS_USER'))
                 $post['weight'] = 1;
             }
             $post['actanniversary'] = ($post['status'] == 0 and $post['dieday_data'] != '0000-00-00 00:00:00') ? 1 : 0;
-			$_sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "
+			$_sql = "INSERT INTO " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "
 						( gid, parentid, parentid2, weight, lev, relationships, gender, status, anniversary_day, anniversary_mont, actanniversary, 
 				alias,full_name, code, name1, name2, 
 				birthday, dieday, life, burial, hometext, content, image, userid, add_time, edit_time) VALUES
@@ -173,11 +166,11 @@ if (defined('NV_IS_USER'))
             {	
 				
                 $alias = change_alias($post['full_name']);
-                    $query = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . " SET alias=".  $db->quote($alias . "-" . $post['id']) . " WHERE id =" . $post['id'] . "";
+                    $query = "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " SET alias=".  $db->quote($alias . "-" . $post['id']) . " WHERE id =" . $post['id'] . "";
                     $db->query($query);
-                $query = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET number=number+1 WHERE id =" . $post['gid'] . "";
+                $query = "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET number=number+1 WHERE id =" . $post['gid'] . "";
                 $db->query($query);
-				$query = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_". $post_gid['fid'] ." SET number=number+1 WHERE id =" . $post['gid'] . "";
+				$query = "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_". $post_gid['fid'] ." SET number=number+1 WHERE id =" . $post['gid'] . "";
 				//die($query);
                 $db->query($query);
                 nv_fix_genealogy_user($post['parentid']);
@@ -194,7 +187,7 @@ if (defined('NV_IS_USER'))
         {
             $post['actanniversary'] = ($post['status'] == $post_old['status'] and $post['status'] == 0) ? 0 : $post_old['actanniversary'];
             //$post['anniversary'] = ($post['dieday_data'] == '0000-00-00 00:00:00') ? $post['anniversary'] : '';
-            $query = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . " SET parentid2=" . $post['parentid2'] . ", weight=" . $post['weight'] . ", relationships =  " . $post['relationships'] . ", gender=" . $post['gender'] . ", status= " . $post['status'] . ", actanniversary= " . $db->quote($post['actanniversary']) . ", 
+            $query = "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " SET parentid2=" . $post['parentid2'] . ", weight=" . $post['weight'] . ", relationships =  " . $post['relationships'] . ", gender=" . $post['gender'] . ", status= " . $post['status'] . ", actanniversary= " . $db->quote($post['actanniversary']) . ", 
 			full_name=" . $db->quote($post['full_name']) . ", code=" . $db->quote($post['code']) . ", name1=" . $db->quote($post['name1']) . ", name2=" . $db->quote($post['name2']) . ", 
 			birthday='" . $post['birthday_data'] . "', dieday='" . $post['dieday_data'] . "', life='" . $post['life'] . "', burial=" . $db->quote($post['burial']) . ", content=" . $db->quote($post['content']) . ",
 			edit_time=UNIX_TIMESTAMP( ) WHERE id =" . $post['id'] . "";
@@ -203,7 +196,7 @@ if (defined('NV_IS_USER'))
                 $alias = change_alias($post['full_name']);
                 if ($post_old['alias'] != $alias)
                 {
-                        $query = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . " SET alias=" . $db->quote($alias . "-" . $post['id']) . " WHERE id =" . $post['id'] . "";
+                        $query = "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " SET alias=" . $db->quote($alias . "-" . $post['id']) . " WHERE id =" . $post['id'] . "";
                         $db->query($query);
                 }
                 nv_fix_genealogy_user($post['parentid']);
@@ -223,7 +216,7 @@ if (defined('NV_IS_USER'))
     elseif ($post['id'])
     {
 		
-        $post = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $post['id'] . "")->fetch();
+        $post = $db->query("SELECT * FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $post['id'] . "")->fetch();
 
         preg_match("/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})/", $post['birthday'], $datetime);
         if ($post['birthday'] != '0000-00-00 00:00:00')
@@ -260,7 +253,7 @@ if (defined('NV_IS_USER'))
     elseif ($post['parentid'] > 0)
     {
 
-        list($maxweight) = $db->query("SELECT max(weight) FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE parentid=" . $post['parentid'] . " AND relationships=" . $post['relationships'])->fetch(3);
+        list($maxweight) = $db->query("SELECT max(weight) FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE parentid=" . $post['parentid'] . " AND relationships=" . $post['relationships'])->fetch(3);
         $post['weight'] = intval($maxweight) + 1;
 
     }
@@ -319,7 +312,7 @@ if (defined('NV_IS_USER'))
 
     if ($post['parentid'] > 0 and $post['relationships'] == 1)
     {
-        $sql = "SELECT id,full_name FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE parentid=" . $post['parentid'] . " AND id!=" . $post['id'] . " AND relationships=2 ORDER BY weight";
+        $sql = "SELECT id,full_name FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE parentid=" . $post['parentid'] . " AND id!=" . $post['id'] . " AND relationships=2 ORDER BY weight";
         $result = $db->query($sql);
         while ($row = $result->fetch())
         {
@@ -412,7 +405,7 @@ if (defined('NV_IS_USER'))
     if ($post['parentid'] > 0)
     {
         $xtpl->parse('main.root');
-        list($full_name_parentid) = $db->query("SELECT full_name FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $post['parentid'])->fetch();
+        list($full_name_parentid) = $db->query("SELECT full_name FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $post['parentid'])->fetch();
         $page_title .= ": " . $full_name_parentid . " ---> " . $post['full_name'];
     }
 

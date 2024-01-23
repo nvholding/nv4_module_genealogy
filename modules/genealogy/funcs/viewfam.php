@@ -66,7 +66,7 @@ if( empty( $contents ) )
 
 		$db->sqlreset()
 			->select( 'COUNT(*)' )
-			->from( NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
 			->where( 'status=1' );
 
 		$num_items = $db->query( $db->sql() )->fetchColumn();
@@ -144,7 +144,7 @@ if( empty( $contents ) )
 		{
 			$db->sqlreset()
 				->select( 'id, listcatid, addtime, edittime, publtime, title, alias, hitstotal' )
-				->from( NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
+				->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
 				->order( $order_by )
 				->limit( $st_links );
 			if( $viewcat == 'viewcat_page_new' )
@@ -173,7 +173,7 @@ if( empty( $contents ) )
 
 		$db->sqlreset()
 			->select( 'COUNT(*)' )
-			->from( NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
 			->where( 'status=1' );
 
 		$num_items = $db->query( $db->sql() )->fetchColumn();
@@ -262,7 +262,7 @@ if( empty( $contents ) )
 				$array_cat_other[$key] = $global_array_cat[$catid_i];
 				$db->sqlreset()
 					->select( 'id, catid, listcatid, topicid, admin_id, author, sourceid, addtime, edittime, publtime, title, alias, hometext, homeimgfile, homeimgalt, homeimgthumb, allowed_rating, hitstotal, hitscm, total_rating, click_rating' )
-					->from( NV_PREFIXLANG . '_' . $module_data . '_' . $catid_i );
+					->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid_i );
 
 				$featured = 0;
 				if( $global_array_cat[$catid_i]['featured'] != 0 )
@@ -354,7 +354,7 @@ if( empty( $contents ) )
 
 		$db->sqlreset()
 			->select( 'id, listcatid, topicid, admin_id, author, sourceid, addtime, edittime, publtime, title, alias, hometext, homeimgfile, homeimgalt, homeimgthumb, allowed_rating, hitstotal, hitscm, total_rating, click_rating' )
-			->from( NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
 			->where( 'status=1' );
 		$featured = 0;
 		if( $global_array_cat[$catid]['featured'] != 0 )
@@ -441,7 +441,7 @@ if( empty( $contents ) )
 			$array_cat_other[$key] = $global_array_cat[$catid_i];
 			$db->sqlreset()
 				->select( 'id, listcatid, topicid, admin_id, author, sourceid, addtime, edittime, publtime, title, alias, hometext, homeimgfile, homeimgalt, homeimgthumb, allowed_rating, hitstotal, hitscm, total_rating, click_rating' )
-				->from( NV_PREFIXLANG . '_' . $module_data . '_' . $catid_i )
+				->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid_i )
 				->where( 'status=1' );
 
 			$featured = 0;
@@ -530,7 +530,7 @@ if( empty( $contents ) )
 
 		$db->sqlreset()
 			->select( 'COUNT(*)' )
-			->from( NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
 			->where( 'status=1' );
 
 		$num_items = $db->query( $db->sql() )->fetchColumn();
@@ -580,7 +580,7 @@ if( empty( $contents ) )
 
 		$db->sqlreset()
 			->select( 'COUNT(*)' )
-			->from( NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
+			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid )
 			->where( 'status=1' );
 
 		$num_items = $db->query( $db->sql() )->fetchColumn();

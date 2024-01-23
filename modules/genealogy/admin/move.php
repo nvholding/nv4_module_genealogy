@@ -9,18 +9,9 @@
  */
 
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
-if( ! defined( 'NV_MODULE_LOCATION' ) ){
-	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_admin_theme( $contents );
-	include NV_ROOTDIR . '/includes/footer.php';
-	die();
-	
-	
-}
 
-$page_title = $lang_module['move'];
+
+$page_title = $nv_Lang->getModule('move');
 
 $id_array = array();
 $listid = $nv_Request->get_string( 'listid', 'get,post', '' );
@@ -38,27 +29,27 @@ if( $nv_Request->isset_request( 'idcheck', 'post' ) )
 			$fid = $fids[0];
 		}
 
-		$result = $db->query( 'SELECT id, listfid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id IN (' . implode( ',', $id_array ) . ')' );
+		$result = $db->query( 'SELECT id, listfid FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id IN (' . implode( ',', $id_array ) . ')' );
 		while( list( $id, $listfid_old ) = $result->fetch( 3 ) )
 		{
 			$array_fid_old = explode( ',', $listfid_old );
 			foreach( $array_fid_old as $fid_i )
 			{
-				$db->exec( 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' WHERE id=' . $id );
+				$db->exec( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' WHERE id=' . $id );
 			}
 
-			$db->exec( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET fid=' . $fid . ', listfid=' . $db->quote( $listfid ) . ' WHERE id=' . $id );
+			$db->exec( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET fid=' . $fid . ', listfid=' . $db->quote( $listfid ) . ' WHERE id=' . $id );
 
 			foreach( $fids as $fid_i )
 			{
 				try
 				{
-					$db->exec( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $id );
+					$db->exec( 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $id );
 				}
 				catch( PDOException $e )
 				{
-					$db->exec( 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' WHERE id=' . $id );
-					$db->exec( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $id );
+					$db->exec( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' WHERE id=' . $id );
+					$db->exec( 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $id );
 				}
 			}
 		}
@@ -79,7 +70,7 @@ if( empty( $id_array ) )
 	die();
 }
 
-$db->sqlreset()->select( 'id, title' )->from( NV_PREFIXLANG . '_' . $module_data . '_genealogy' )->where( 'id IN (' . implode( ',', $id_array ) . ')' )->order( 'id DESC' );
+$db->sqlreset()->select( 'id, title' )->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy' )->where( 'id IN (' . implode( ',', $id_array ) . ')' )->order( 'id DESC' );
 $result = $db->query( $db->sql() );
 
 $xtpl = new XTemplate( $op . '.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file );

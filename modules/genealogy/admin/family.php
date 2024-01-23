@@ -11,7 +11,7 @@
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
 if( ! defined( 'NV_MODULE_LOCATION' ) ){
 	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+	$contents = '<p class="note_fam">' . $nv_Lang->getModule('note_location') . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
@@ -20,7 +20,7 @@ if( ! defined( 'NV_MODULE_LOCATION' ) ){
 	
 }
 
-$page_title = $lang_module['family'];
+$page_title = $nv_Lang->getModule('family');
 
 if( defined( 'NV_EDITOR' ) )
 {
@@ -73,12 +73,12 @@ if( $fid > 0 and isset( $global_array_fam[$fid] ) )
 		}
 	}
 
-	$caption = $lang_module['edit_fam'];
+	$caption = $nv_Lang->getModule('edit_fam');
 	$array_in_fam = GetfidInParent( $fid );
 }
 else
 {
-	$caption = $lang_module['add_fam'];
+	$caption = $nv_Lang->getModule('add_fam');
 	$array_in_fam = array();
 }
 
@@ -114,7 +114,7 @@ if( !empty( $savefam ) )
 			}
 			else
 			{
-				$_m_fid = $db->query( 'SELECT MAX(fid) AS fid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_family' )->fetchColumn();
+				$_m_fid = $db->query( 'SELECT MAX(fid) AS fid FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family' )->fetchColumn();
 
 				if( empty( $_m_fid ) )
 				{
@@ -157,12 +157,12 @@ if( !empty( $savefam ) )
 
 	if( $fid == 0 and $title != '' )
 	{
-		$weight = $db->query( 'SELECT max(weight) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_family WHERE parentid=' . $parentid )->fetchColumn();
+		$weight = $db->query( 'SELECT max(weight) FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family WHERE parentid=' . $parentid )->fetchColumn();
 		$weight = intval( $weight ) + 1;
 		$viewfam = 'viewfam_page_new';
 		$subfid = '';
 
-		$sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_family (parentid, title, titlesite, alias, description, descriptionhtml, image, viewdescription, weight, sort, lev, viewfam, numsubfam, subfid, inhome, numlinks, newday,featured, keywords, admins, add_time, edit_time, groups_view) VALUES
+		$sql = "INSERT INTO " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family (parentid, title, titlesite, alias, description, descriptionhtml, image, viewdescription, weight, sort, lev, viewfam, numsubfam, subfid, inhome, numlinks, newday,featured, keywords, admins, add_time, edit_time, groups_view) VALUES
 			(:parentid, :title, :titlesite, :alias, :description, :descriptionhtml, '', '" . $viewdescription . "', :weight, '0', '0', :viewfam, '0', :subfid, '1', '3', '2',:featured, :keywords, :admins, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", :groups_view)";
 
 		$data_insert = array();
@@ -185,28 +185,28 @@ if( !empty( $savefam ) )
 		{
 			require_once NV_ROOTDIR . '/includes/action_' . $db->dbtype . '.php';
 
-			nv_copy_structure_table( NV_PREFIXLANG . '_' . $module_data . '_' . $newfid, NV_PREFIXLANG . '_' . $module_data . '_genealogy ' );
+			nv_copy_structure_table( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $newfid, $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy ' );
 			
 			nv_fix_fam_order();
 
 			if( ! defined( 'NV_IS_ADMIN_MODULE' ) )
 			{
-				$db->query( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content) VALUES (' . $admin_id . ', ' . $newfid . ', 1, 1, 1, 1, 1)' );
+				$db->query( 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_admins (userid, fid, admin, add_content, pub_content, edit_content, del_content) VALUES (' . $admin_id . ', ' . $newfid . ', 1, 1, 1, 1, 1)' );
 			}
 
 			$nv_Cache->delMod( $module_name );
-			nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['add_fam'], $title, $admin_info['userid'] );
+			nv_insert_logs( NV_LANG_DATA, $module_name, $nv_Lang->getModule('add_fam'), $title, $admin_info['userid'] );
 			Header( 'Location: ' . NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '&parentid=' . $parentid );
 			die();
 		}
 		else
 		{
-			$error = $lang_module['errorsave'];
+			$error = $nv_Lang->getModule('errorsave');
 		}
 	}
 	elseif( $fid > 0 and $title != '' )
 	{
-		$stmt = $db->prepare( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_family SET parentid= :parentid, title= :title, titlesite=:titlesite, alias = :alias, description = :description, descriptionhtml = :descriptionhtml, image= :image, viewdescription= :viewdescription,featured=:featured, keywords= :keywords, groups_view= :groups_view, edit_time=' . NV_CURRENTTIME . ' WHERE fid =' . $fid );
+		$stmt = $db->prepare( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family SET parentid= :parentid, title= :title, titlesite=:titlesite, alias = :alias, description = :description, descriptionhtml = :descriptionhtml, image= :image, viewdescription= :viewdescription,featured=:featured, keywords= :keywords, groups_view= :groups_view, edit_time=' . NV_CURRENTTIME . ' WHERE fid =' . $fid );
 		$stmt->bindParam( ':parentid', $parentid, PDO::PARAM_INT );
 		$stmt->bindParam( ':title', $title, PDO::PARAM_STR );
 		$stmt->bindParam( ':titlesite', $titlesite, PDO::PARAM_STR );
@@ -224,14 +224,14 @@ if( !empty( $savefam ) )
 		{
 			if( $parentid != $parentid_old )
 			{
-				$weight = $db->query( 'SELECT max(weight) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_family WHERE parentid=' . $parentid )->fetchColumn();
+				$weight = $db->query( 'SELECT max(weight) FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family WHERE parentid=' . $parentid )->fetchColumn();
 				$weight = intval( $weight ) + 1;
 
-				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_family SET weight=' . $weight . ' WHERE fid=' . intval( $fid );
+				$sql = 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family SET weight=' . $weight . ' WHERE fid=' . intval( $fid );
 				$db->query( $sql );
 
 				nv_fix_fam_order();
-				nv_insert_logs( NV_LANG_DATA, $module_name, $lang_module['edit_fam'], $title, $admin_info['userid'] );
+				nv_insert_logs( NV_LANG_DATA, $module_name, $nv_Lang->getModule('edit_fam'), $title, $admin_info['userid'] );
 			}
 
 			$nv_Cache->delMod( $module_name );
@@ -240,12 +240,12 @@ if( !empty( $savefam ) )
 		}
 		else
 		{
-			$error = $lang_module['errorsave'];
+			$error = $nv_Lang->getModule('errorsave');
 		}
 	}
 	else
 	{
-		$error = $lang_module['error_name'];
+		$error = $nv_Lang->getModule('error_name');
 	}
 }
 
@@ -254,7 +254,7 @@ $groups_view = explode( ',', $groups_view );
 $array_fam_list = array();
 if( defined( 'NV_IS_ADMIN_MODULE' ) )
 {
-	$array_fam_list[0] = $lang_module['fam_sub_sl'];
+	$array_fam_list[0] = $nv_Lang->getModule('fam_sub_sl');
 }
 foreach( $global_array_fam as $fid_i => $array_value )
 {
@@ -279,7 +279,7 @@ foreach( $global_array_fam as $fid_i => $array_value )
 if( !empty( $array_fam_list ) )
 {
 	$fam_listsub = array();
-	while( list( $fid_i, $title_i ) = each( $array_fam_list ) )
+	foreach( $array_fam_list as $fid_i => $title_i ) 
 	{
 		if( !in_array( $fid_i, $array_in_fam ) )
 		{
@@ -302,12 +302,12 @@ if( !empty( $array_fam_list ) )
 	}
 }
 
-$lang_global['title_suggest_max'] = sprintf( $lang_global['length_suggest_max'], 65 );
-$lang_global['description_suggest_max'] = sprintf( $lang_global['length_suggest_max'], 160 );
+$lang_module['title_suggest_max'] = sprintf( $nv_Lang->getModule('length_suggest_max'), 65 );
+$lang_module['description_suggest_max'] = sprintf( $nv_Lang->getModule('length_suggest_max'), 160 );
 
 $xtpl = new XTemplate( 'fam.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file );
-$xtpl->assign( 'LANG', $lang_module );
-$xtpl->assign( 'GLANG', $lang_global );
+$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
+$xtpl->assign( 'GLANG', \NukeViet\Core\Language::$lang_global );
 $xtpl->assign( 'NV_BASE_ADMINURL', NV_BASE_ADMINURL );
 $xtpl->assign( 'NV_NAME_VARIABLE', NV_NAME_VARIABLE );
 $xtpl->assign( 'MODULE_NAME', $module_name );
@@ -335,14 +335,14 @@ for( $i = 0; $i <= 2; $i++ )
 	$data = array(
 		'value' => $i,
 		'selected' => ($viewdescription == $i) ? ' checked="checked"' : '',
-		'title' => $lang_module['viewdescription_' . $i]
+		'title' => $nv_Lang->getModule('viewdescription_' . $i)
 	);
 	$xtpl->assign( 'VIEWDESCRIPTION', $data );
 	$xtpl->parse( 'main.content.viewdescription' );
 }
 if( $fid > 0 )
 {
-	$sql = 'SELECT id FROM ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE status=1 ORDER BY publtime DESC LIMIT 100';
+	$sql = 'SELECT id FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE status=1 ORDER BY publtime DESC LIMIT 100';
 	$result = $db->query( $sql );
 	$array_id=array();
 	$array_id[] = $featured;
@@ -351,7 +351,7 @@ if( $fid > 0 )
 		$array_id[] = $row['id'] ;
 	}
 
-	$sql1 = 'SELECT id, title FROM ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE id IN ('.implode(',', $array_id).') ORDER BY publtime DESC';
+	$sql1 = 'SELECT id, title FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE id IN ('.implode(',', $array_id).') ORDER BY publtime DESC';
 	$result = $db->query( $sql1 );
 
 	while( $row = $result->fetch() )

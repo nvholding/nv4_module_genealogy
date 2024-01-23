@@ -996,7 +996,7 @@ function nv_theme_genealogy_detail( $row_genealogy, $row_detail, $array_parentid
 			}
 		}
 		$xtpl->assign( 'DATA', $row_detail );
-		
+		$i=0;
 		foreach( $array_parentid as $array_parentid_i )
 		{
 			$xtpl->assign( 'PARENTIDCAPTION', $array_parentid_i['caption'] );
@@ -1013,6 +1013,17 @@ function nv_theme_genealogy_detail( $row_genealogy, $row_detail, $array_parentid
 					$xtpl->parse( 'main.info.parentid.loop2' );
 				}
 			}
+			if(defined( 'NV_IS_GENEALOGY_MANAGER' )){
+				if($i == 1){
+					$xtpl->parse( 'main.info.parentid.manager.adduser' );
+				}
+				if($i == 2){
+					$xtpl->parse( 'main.info.parentid.manager.addewife' );
+					
+				}
+				$xtpl->parse( 'main.info.parentid.manager' );
+			}
+			$i++;
 			$xtpl->parse( 'main.info.parentid' );
 		}
 		if( ! empty( $row_detail['content'] ) )
@@ -1106,9 +1117,9 @@ $xtpl = new XTemplate("manager-genealogy.tpl", NV_ROOTDIR . "/themes/" . $module
 
 	if (nv_function_exists('nv_aleditor'))
     {
-        $news_contents['bodytext'] = nv_aleditor('bodytext', '100%', '200px', $news_contents['bodytext']);
-        $news_contents['rule'] = nv_aleditor('rule', '100%', '200px', $news_contents['rule']);
-        $news_contents['content'] = nv_aleditor('content', '100%', '200px', $news_contents['content']);
+        $news_contents['bodytext'] = nv_aleditor('bodytext', '100%', '200px', $news_contents['bodytext'],'Basic' );
+        $news_contents['rule'] = nv_aleditor('rule', '100%', '200px', $news_contents['rule'],'Basic' );
+        $news_contents['content'] = nv_aleditor('content', '100%', '200px', $news_contents['content'],'Basic' );
     }
     else
     {
@@ -1122,7 +1133,6 @@ $xtpl = new XTemplate("manager-genealogy.tpl", NV_ROOTDIR . "/themes/" . $module
 		
         $xtpl->assign('DATATREE', nv_manager_viewdirtree_genealogy(0,'manager-genealogy'));
         $xtpl->parse('main.foldertree');
-		print_r(defined( 'NV_IS_GENEALOGY_MANAGER' ));
 		if( defined( 'NV_IS_GENEALOGY_MANAGER' )){
 			$xtpl->parse('main.contextMenu');
 		}
@@ -1139,7 +1149,7 @@ $xtpl = new XTemplate("manager-genealogy.tpl", NV_ROOTDIR . "/themes/" . $module
     return $xtpl->text('main');
 
 }
-function create_genealogy($news_contents, $list_users, $array_keyword, $content_comment, $data_config)
+function create_genealogy($news_contents, $list_users, $array_keyword, $content_comment, $data_config, $error)
 {
 		global $global_config, $nv_Lang, $module_name, $module_file, $lang_module, $my_head, $module_info, $op, $global_array_fam, $global_array_location_city, $global_array_location_district, $global_array_location_ward;
 	    $xtpl = new XTemplate("create-genealogy.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
@@ -1230,9 +1240,9 @@ function create_genealogy($news_contents, $list_users, $array_keyword, $content_
 
 	if (nv_function_exists('nv_aleditor'))
     {
-        $news_contents['bodytext'] = nv_aleditor('bodytext', '100%', '200px', $news_contents['bodytext']);
-        $news_contents['rule'] = nv_aleditor('rule', '100%', '200px', $news_contents['rule']);
-        $news_contents['content'] = nv_aleditor('content', '100%', '200px', $news_contents['content']);
+        $news_contents['bodytext'] = nv_aleditor('bodytext', '100%', '200px', $news_contents['bodytext'],'Basic' );
+        $news_contents['rule'] = nv_aleditor('rule', '100%', '200px', $news_contents['rule'],'Basic' );
+        $news_contents['content'] = nv_aleditor('content', '100%', '200px', $news_contents['content'],'Basic' );
     }
     else
     {
@@ -1259,6 +1269,10 @@ function create_genealogy($news_contents, $list_users, $array_keyword, $content_
 			$xtpl->parse('main.no_list');
 		}
     }
+	if (!empty($error)) {
+		$xtpl->assign('error', implode('<br />', $error));
+		$xtpl->parse('main.error');
+	}
     $xtpl->parse('main');
     return $xtpl->text('main');
 

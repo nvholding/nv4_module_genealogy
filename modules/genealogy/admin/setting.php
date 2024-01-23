@@ -11,7 +11,7 @@
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
 if( ! defined( 'NV_MODULE_LOCATION' ) ){
 	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+	$contents = '<p class="note_fam">' . \NukeViet\Core\Language::$lang_module['note_location'] . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
@@ -19,7 +19,7 @@ if( ! defined( 'NV_MODULE_LOCATION' ) ){
 	
 	
 }
-$page_title = $lang_module['setting'];
+$page_title = \NukeViet\Core\Language::$lang_module['setting'];
 
 if( defined( 'NV_EDITOR' ) )
 {
@@ -83,8 +83,8 @@ if( ! empty( $savesetting ) )
 }
 
 $xtpl = new XTemplate( 'settings.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file );
-$xtpl->assign( 'LANG', $lang_module );
-$xtpl->assign( 'GLANG', $lang_global );
+$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
+$xtpl->assign( 'GLANG', \NukeViet\Core\Language::$lang_global );
 $xtpl->assign( 'NV_BASE_ADMINURL', NV_BASE_ADMINURL );
 $xtpl->assign( 'NV_NAME_VARIABLE', NV_NAME_VARIABLE );
 $xtpl->assign( 'NV_OP_VARIABLE', NV_OP_VARIABLE );
@@ -93,10 +93,10 @@ $xtpl->assign( 'OP', $op );
 $xtpl->assign( 'DATA', $module_config[$module_name] );
 
 $array_tooltip_position = array(
-	'top' => $lang_module['showtooltip_position_top'],
-	'bottom' => $lang_module['showtooltip_position_bottom'],
-	'left' => $lang_module['showtooltip_position_left'],
-	'right' => $lang_module['showtooltip_position_right']);
+	'top' => \NukeViet\Core\Language::$lang_module['showtooltip_position_top'],
+	'bottom' => \NukeViet\Core\Language::$lang_module['showtooltip_position_bottom'],
+	'left' => \NukeViet\Core\Language::$lang_module['showtooltip_position_left'],
+	'right' => \NukeViet\Core\Language::$lang_module['showtooltip_position_right']);
 
 // Vi tri hien thi tooltip
 foreach( $array_tooltip_position as $key => $val )
@@ -147,7 +147,7 @@ for( $i = 0; $i <= 6; ++$i )
 {
 	$xtpl->assign( 'RATING_POINT', array(
 		'key' => $i,
-		'title' => ($i == 6) ? $lang_module['no_allowed_rating'] : $i,
+		'title' => ($i == 6) ? \NukeViet\Core\Language::$lang_module['no_allowed_rating'] : $i,
 		"selected" => $i == $module_config[$module_name]['allowed_rating_point'] ? " selected=\"selected\"" : ""
 	) );
 	$xtpl->parse( 'main.allowed_rating_point' );
@@ -183,13 +183,13 @@ foreach( $array_structure_image as $type => $dir )
 
 
 $array_imgposition = array(
-	0 => $lang_module['imgposition_0'],
-	1 => $lang_module['imgposition_1'],
-	2 => $lang_module['imgposition_2']
+	0 => \NukeViet\Core\Language::$lang_module['imgposition_0'],
+	1 => \NukeViet\Core\Language::$lang_module['imgposition_1'],
+	2 => \NukeViet\Core\Language::$lang_module['imgposition_2']
 );
 
 // position images
-while( list( $id_imgposition, $title_imgposition ) = each( $array_imgposition ) )
+foreach( $array_imgposition as $id_imgposition => $title_imgposition ) 
 {
 	$sl = ( $id_imgposition == $module_config[$module_name]['imgposition'] ) ? ' selected="selected"' : '';
 	$xtpl->assign( 'id_imgposition', $id_imgposition );

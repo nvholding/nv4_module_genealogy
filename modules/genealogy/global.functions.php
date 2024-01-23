@@ -24,7 +24,7 @@ if( $timecheckstatus > 0 and $timecheckstatus < NV_CURRENTTIME )
  */
 function nv_set_status_module()
 {
-	global $db, $module_name, $module_data, $global_config;
+	global $db, $db_config, $module_name, $module_data, $global_config, $nv_Cache;
 
 	$check_run_cronjobs = NV_ROOTDIR . '/' . NV_LOGS_DIR . '/data_logs/cronjobs_' . md5( $module_data . 'nv_set_status_module' . $global_config['sitekey'] ) . '.txt';
 	$p = NV_CURRENTTIME - 300;
@@ -40,7 +40,7 @@ function nv_set_status_module()
 	//status_3= "Het han";
 
 	// Dang cai bai cho kich hoat theo thoi gian
-	$query = $db->query( 'SELECT id, listfid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE status=2 AND publtime < ' . NV_CURRENTTIME . ' ORDER BY publtime ASC' );
+	$query = $db->query( 'SELECT id, listfid FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE status=2 AND publtime < ' . NV_CURRENTTIME . ' ORDER BY publtime ASC' );
 	while( list( $id, $listfid ) = $query->fetch( 3 ) )
 	{
 		$array_fid = explode( ',', $listfid );
@@ -49,14 +49,14 @@ function nv_set_status_module()
 			$fid_i = intval( $fid_i );
 			if( $fid_i > 0 )
 			{
-				$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SET status=1 WHERE id=' . $id );
+				$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SET status=1 WHERE id=' . $id );
 			}
 		}
-		$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET status=1 WHERE id=' . $id );
+		$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET status=1 WHERE id=' . $id );
 	}
 
 	// Ngung hieu luc cac bai da het han
-	$query = $db->query( 'SELECT id, listfid, archive FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE status=1 AND exptime > 0 AND exptime <= ' . NV_CURRENTTIME . ' ORDER BY exptime ASC' );
+	$query = $db->query( 'SELECT id, listfid, archive FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE status=1 AND exptime > 0 AND exptime <= ' . NV_CURRENTTIME . ' ORDER BY exptime ASC' );
 	while( list( $id, $listfid, $archive ) = $query->fetch( 3 ) )
 	{
 		if( intval( $archive ) == 0 )
@@ -70,8 +70,8 @@ function nv_set_status_module()
 	}
 
 	// Tim kiem thoi gian chay lan ke tiep
-	$time_publtime = $db->query( 'SELECT min(publtime) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE status=2 AND publtime > ' . NV_CURRENTTIME )->fetchColumn();
-	$time_exptime = $db->query( 'SELECT min(exptime) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE status=1 AND exptime > ' . NV_CURRENTTIME )->fetchColumn();
+	$time_publtime = $db->query( 'SELECT min(publtime) FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE status=2 AND publtime > ' . NV_CURRENTTIME )->fetchColumn();
+	$time_exptime = $db->query( 'SELECT min(exptime) FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE status=1 AND exptime > ' . NV_CURRENTTIME )->fetchColumn();
 
 	$timecheckstatus = min( $time_publtime, $time_exptime );
 	if( ! $timecheckstatus ) $timecheckstatus = max( $time_publtime, $time_exptime );
@@ -96,10 +96,10 @@ function nv_set_status_module()
  */
 function nv_del_content_module( $id )
 {
-	global $db, $module_name, $module_data, $title, $lang_module, $nv_Lang;
+	global $db, $db_config, $module_name, $module_data, $title, $lang_module, $nv_Lang;
 	$content_del = 'NO_' . $id;
 	$title = '';
-	list( $id, $listfid, $title, $homeimgfile ) = $db->query( 'SELECT id, listfid, title, homeimgfile FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . intval( $id ) )->fetch( 3 );
+	list( $id, $listfid, $title, $homeimgfile ) = $db->query( 'SELECT id, listfid, title, homeimgfile FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . intval( $id ) )->fetch( 3 );
 	if( $id > 0 )
 	{
 		$number_no_del = 0;
@@ -109,7 +109,7 @@ function nv_del_content_module( $id )
 			$fid_i = intval( $fid_i );
 			if( $fid_i > 0 )
 			{
-				$_sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' WHERE id=' . $id;
+				$_sql = 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' WHERE id=' . $id;
 				if( ! $db->exec( $_sql ) )
 				{
 					++$number_no_del;
@@ -117,28 +117,28 @@ function nv_del_content_module( $id )
 			}
 		}
 		
-		$_sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $id;
+		$_sql = 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy WHERE id=' . $id;
 		if( ! $db->exec( $_sql ) )
 		{
 			++$number_no_del;
 		}
 
-		$_sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $id / 2000 ) . ' WHERE id = ' . $id;
+		$_sql = 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodyhtml_' . ceil( $id / 2000 ) . ' WHERE id = ' . $id;
 		if( ! $db->exec( $_sql ) )
 		{
 			++$number_no_del;
 		}
 		
-		$_sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bodytext WHERE id = ' . $id;
+		$_sql = 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_bodytext WHERE id = ' . $id;
 		if( ! $db->exec( $_sql ) )
 		{
 			++$number_no_del;
 		}
 		
-		$db->query( 'DELETE FROM ' . NV_PREFIXLANG . '_comment WHERE module=' . $db->quote( $module_name ) . ' AND id = ' . $id );
+		$db->query( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_comment WHERE module=' . $db->quote( $module_name ) . ' AND id = ' . $id );
 		
-		$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_tags SET numnews = numnews-1 WHERE tid IN (SELECT tid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id=' . $id . ')' );
-		$db->query( 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id = ' . $id );
+		$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags SET numnews = numnews-1 WHERE tid IN (SELECT tid FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id=' . $id . ')' );
+		$db->query( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id = ' . $id );
 		
 		if( $number_no_del == 0 )
 		{
@@ -168,10 +168,10 @@ function nv_archive_content_module( $id, $listfid )
 		$fid_i = intval( $fid_i );
 		if( $fid_i > 0 )
 		{
-			$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SET status=3 WHERE id=' . $id );
+			$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid_i . ' SET status=3 WHERE id=' . $id );
 		}
 	}
-	$db->query( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET status=3 WHERE id=' . $id );
+	$db->query( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy SET status=3 WHERE id=' . $id );
 }
 
 /**
@@ -430,4 +430,59 @@ if( ! nv_function_exists( 'convertLunar2Solar' ) )
 		$monthStart = getNewMoonDay($k + $off, $timeZone);
 		return jdToDate($monthStart + $lunarDay - 1);
 	}
+}
+
+/**
+ * nv_fix_fam_order()
+ *
+ * @param integer $parentid
+ * @param integer $order
+ * @param integer $lev
+ * @return
+ */
+function nv_fix_block_cat_order( $userid , $parentid = 0, $order = 0, $lev = 0 )
+{
+	global $db, $module_data, $db_config;
+
+	$sql = 'SELECT bid, catid FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_block_cat WHERE userid = ' . $userid . ' AND catid=' . $parentid . ' ORDER BY weight ASC';
+	$result = $db->query( $sql );
+	$array_block_cat_order = array();
+	while( $row = $result->fetch() )
+	{
+		$array_block_cat_order[] = $row['bid'];
+	}
+	$result->closeCursor();
+	$weight = 0;
+	if( $parentid > 0 )
+	{
+		++$lev;
+	}
+	else
+	{
+		$lev = 0;
+	}
+	foreach( $array_block_cat_order as $catid_i )
+	{
+		++$order;
+		++$weight;
+		$sql = 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_block_cat SET weight=' . $weight . ', sort=' . $order . ', lev=' . $lev . ' WHERE bid=' . intval( $catid_i );
+		$db->query( $sql );
+		$order = nv_fix_block_cat_order( $userid, $catid_i, $order, $lev );
+	}
+	$numsubfam = $weight;
+	if( $parentid > 0 )
+	{
+		$sql = 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_block_cat SET numsubcat=' . $numsubfam;
+		if( $numsubfam == 0 )
+		{
+			$sql .= ",subcatid=''";
+		}
+		else
+		{
+			$sql .= ",subcatid='" . implode( ',', $array_block_cat_order ) . "'";
+		}
+		$sql .= ' WHERE bid=' . intval( $parentid );
+		$db->query( $sql );
+	}
+	return $order;
 }

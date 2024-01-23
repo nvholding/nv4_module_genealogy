@@ -11,7 +11,7 @@
 if( ! defined( 'NV_IS_FILE_ADMIN' ) ) die( 'Stop!!!' );
 if( ! defined( 'NV_MODULE_LOCATION' ) ){
 	
-	$contents = '<p class="note_fam">' . $lang_module['note_location'] . '</p>';
+	$contents = '<p class="note_fam">' . \NukeViet\Core\Language::$lang_module['note_location'] . '</p>';
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_admin_theme( $contents );
 	include NV_ROOTDIR . '/includes/footer.php';
@@ -28,9 +28,9 @@ if( ! defined( 'NV_MODULE_LOCATION' ) ){
  */
 function nv_show_tags_list( $q = '', $incomplete = false )
 {
-	global $db, $lang_module, $lang_global, $module_name, $module_data, $op, $module_file, $global_config, $module_info, $module_config;
+	global $db, $db_config, $lang_module, $lang_global, $module_name, $module_data, $op, $module_file, $global_config, $module_info, $module_config;
 
-	$db->sqlreset()->select( '*' )->from( NV_PREFIXLANG . '_' . $module_data . '_tags' )->order( 'alias ASC' );
+	$db->sqlreset()->select( '*' )->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags' )->order( 'alias ASC' );
 
 	if( $incomplete === true )
 	{
@@ -55,8 +55,8 @@ function nv_show_tags_list( $q = '', $incomplete = false )
 	$sth->execute();
 
 	$xtpl = new XTemplate( 'tags_lists.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file );
-	$xtpl->assign( 'LANG', $lang_module );
-	$xtpl->assign( 'GLANG', $lang_global );
+	$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
+	$xtpl->assign( 'GLANG', \NukeViet\Core\Language::$lang_global );
 
 	$number = 0;
 	while( $row = $sth->fetch() )
@@ -95,8 +95,8 @@ if( $nv_Request->isset_request( 'del_tid', 'get' ) )
 	$tid = $nv_Request->get_int( 'del_tid', 'get', 0 );
 	if( $tid )
 	{
-		$db->query( 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags WHERE tid=' . $tid );
-		$db->query( 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE tid=' . $tid );
+		$db->query( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags WHERE tid=' . $tid );
+		$db->query( 'DELETE FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE tid=' . $tid );
 	}
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_show_tags_list();
@@ -148,18 +148,18 @@ if( ! empty( $savecat ) )
 	}
 	if( empty( $alias ) )
 	{
-		$error = $lang_module['error_name'];
+		$error = \NukeViet\Core\Language::$lang_module['error_name'];
 	}
 	else
 	{
 		if( $tid == 0 )
 		{
-			$sth = $db->prepare( 'INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_tags (numnews, alias, description, image, keywords) VALUES (0, :alias, :description, :image, :keywords)' );
+			$sth = $db->prepare( 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags (numnews, alias, description, image, keywords) VALUES (0, :alias, :description, :image, :keywords)' );
 			$msg_lg = 'add_tags';
 		}
 		else
 		{
-			$sth = $db->prepare( 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_tags SET alias = :alias, description = :description, image = :image, keywords = :keywords WHERE tid =' . $tid );
+			$sth = $db->prepare( 'UPDATE ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags SET alias = :alias, description = :description, image = :image, keywords = :keywords WHERE tid =' . $tid );
 			$msg_lg = 'edit_tags';
 		}
 
@@ -177,7 +177,7 @@ if( ! empty( $savecat ) )
 		}
 		catch( PDOException $e )
 		{
-			$error = $lang_module['errorsave'];
+			$error = \NukeViet\Core\Language::$lang_module['errorsave'];
 		}
 	}
 }
@@ -186,16 +186,16 @@ $tid = $nv_Request->get_int( 'tid', 'get', 0 );
 
 if( $tid > 0 )
 {
-	list( $tid, $alias, $description, $image, $keywords ) = $db->query( 'SELECT tid, alias, description, image, keywords FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags where tid=' . $tid )->fetch( 3 );
-	$lang_module['add_tags'] = $lang_module['edit_tags'];
+	list( $tid, $alias, $description, $image, $keywords ) = $db->query( 'SELECT tid, alias, description, image, keywords FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_tags where tid=' . $tid )->fetch( 3 );
+	\NukeViet\Core\Language::$lang_module['add_tags'] = \NukeViet\Core\Language::$lang_module['edit_tags'];
 }
 
-$lang_global['title_suggest_max'] = sprintf( $lang_global['length_suggest_max'], 65 );
-$lang_global['description_suggest_max'] = sprintf( $lang_global['length_suggest_max'], 160 );
+\NukeViet\Core\Language::$lang_global['title_suggest_max'] = sprintf( \NukeViet\Core\Language::$lang_global['length_suggest_max'], 65 );
+\NukeViet\Core\Language::$lang_global['description_suggest_max'] = sprintf( \NukeViet\Core\Language::$lang_global['length_suggest_max'], 160 );
 
 $xtpl = new XTemplate( 'tags.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file );
-$xtpl->assign( 'LANG', $lang_module );
-$xtpl->assign( 'GLANG', $lang_global );
+$xtpl->assign( 'LANG', \NukeViet\Core\Language::$lang_module );
+$xtpl->assign( 'GLANG', \NukeViet\Core\Language::$lang_global );
 $xtpl->assign( 'NV_BASE_ADMINURL', NV_BASE_ADMINURL );
 $xtpl->assign( 'NV_NAME_VARIABLE', NV_NAME_VARIABLE );
 $xtpl->assign( 'MODULE_NAME', $module_name );
@@ -233,7 +233,7 @@ if( $incomplete )
 $xtpl->parse( 'main' );
 $contents = $xtpl->text( 'main' );
 
-$page_title = $lang_module['tags'];
+$page_title = \NukeViet\Core\Language::$lang_module['tags'];
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_admin_theme( $contents );

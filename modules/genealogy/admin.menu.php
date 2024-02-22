@@ -99,5 +99,6 @@ if( $NV_IS_ADMIN_MODULE )
 	$allow_func[] = 'tags';
 	$allow_func[] = 'setting';
 	$allow_func[] = 'move';
+	$allow_func[] = 'manager';
 }
 

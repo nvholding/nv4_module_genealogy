@@ -468,9 +468,15 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 				if($tlu['relationships'] == 2){
 					$tparentid = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND id = ' . $lprid )->fetch();
 					$tpr = $tparentid['parentid'];
+					$married_with = $tparentid['parentid'];
 				
+				}elseif($tlu['relationships'] == 3){
+					$tparentid = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND id = ' . $lprid )->fetch();
+					$tpr = $tparentid['parentid'];
+					$married_with = $tparentid['parentid'];
 				}else{
 					$tpr = $lprid;
+					$married_with = '';
 				}
 				if ($tlu['image'] != "" and file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_name . "/" . $tlu['image']))
 				{
@@ -487,9 +493,9 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 					"title"=>$tlu['name1'],
 					"birthday"=>"",
 					"image_list"=>$tlu['image'],
-					"orders"=>$tlu['weight'],
+					"orders"=>0,
 					"parent_id"=>$tpr ,
-					"married_with"=>($tlu['relationships'] == 2 )? $lprid : "",
+					"married_with"=>$married_with,
 					"home_address"=>$tlu['burial'],
 					"gender"=>$tlu['gender'],
 					"child_of_second_married"=>($tlu['parentid2'] > 0 )? $tlu['parentid2'] : "",
@@ -822,8 +828,14 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 	
 	if( $news_contents['id'] > 0 AND empty($array_op[2]) )
 	{
+		$level = $nv_Request->get_int('level','get',0);
+		if($level>0){
+			$where = 'AND lev <= ' . $level;
+		}else{
+			$where = '';
+		}
 		$list_users = array();
-		$sqllistuser = $db->sqlreset()->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" ORDER BY weight ASC' );
+		$sqllistuser = $db->sqlreset()->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . $where . '" ORDER BY weight ASC' );
 		$Treejsons = array();
 		$itree=0;
 		while($listu = $sqllistuser->fetch())
@@ -831,7 +843,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 			$itree++;
 			$lu=array();
 			$lu=$listu;
-			$lu['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $lu['alias'] . $global_config['rewrite_exturl'], true );
+			$lu['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/Pha-Do/' . $lu['alias'] . $global_config['rewrite_exturl'], true );
 			$list_users[$listu['parentid']][$listu['id']] = $lu;
 			
 			
@@ -844,9 +856,15 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 				if($tlu['relationships'] == 2){
 					$tparentid = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND id = ' . $lprid )->fetch();
 					$tpr = $tparentid['parentid'];
+					$married_with = $tparentid['parentid'];
 				
+				}elseif($tlu['relationships'] == 3){
+					$tparentid = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND id = ' . $lprid )->fetch();
+					$tpr = $tparentid['parentid'];
+					$married_with = $tparentid['parentid'];
 				}else{
 					$tpr = $lprid;
+					$married_with = '';
 				}
 				if ($tlu['image'] != "" and file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_name . "/" . $tlu['image']))
 				{
@@ -865,7 +883,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 					"image_list"=>$tlu['image'],
 					"orders"=>$tlu['weight'],
 					"parent_id"=>$tpr ,
-					"married_with"=>($tlu['relationships'] == 2 )? $lprid : "",
+					"married_with"=>$married_with,
 					"home_address"=>$tlu['burial'],
 					"gender"=>$tlu['gender'],
 					"child_of_second_married"=>($tlu['parentid2'] > 0 )? $tlu['parentid2'] : "",
@@ -1071,14 +1089,14 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 			}	
 					
 		}
-$Treejsons = array();
+		$Treejsons = array();
 		$itree=0;
 		while($listu = $sqllistuser->fetch())
 		{
 			$itree++;
 			$lu=array();
 			$lu=$listu;
-			$lu['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . '/' . $lu['alias'] . $global_config['rewrite_exturl'], true );
+			$lu['link']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/Pha-Do/' . $lu['alias'] . $global_config['rewrite_exturl'], true );
 			$list_users[$listu['parentid']][$listu['id']] = $lu;
 			
 			
@@ -1092,10 +1110,17 @@ $Treejsons = array();
 				if($tlu['relationships'] == 2){
 					$tparentid = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND id = ' . $lprid )->fetch();
 					$tpr = $tparentid['parentid'];
-				
+					$married_with = $lprid;
+				}elseif($tlu['relationships'] == 3){
+					$tparentid = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND id = ' . $lprid )->fetch();
+					$tpr = $tparentid['parentid'];
+					$married_with = $lprid;
 				}else{
 					$tpr = $lprid;
+					$married_with = '';
 				}
+				$has_child = 0; 
+				$has_child = $db->query( 'SELECT count(*) as sum FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" AND relationships =1 AND parentid = ' . $luid )->fetch(); 
 				if ($tlu['image'] != "" and file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_name . "/" . $tlu['image']))
 				{
 					$tlu['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . "/" . $module_name . "/" . $tlu['image'];
@@ -1111,9 +1136,9 @@ $Treejsons = array();
 					"title"=>$tlu['name1'],
 					"birthday"=>"",
 					"image_list"=>$tlu['image'],
-					"orders"=>$tlu['gweight'],
+					"orders"=>0,
 					"parent_id"=>$tpr ,
-					"married_with"=>($tlu['relationships'] == 2 )? $lprid : "",
+					"married_with"=>$married_with,
 					"home_address"=>$tlu['burial'],
 					"gender"=>$tlu['gender'],
 					"child_of_second_married"=>($tlu['parentid2'] > 0 )? $tlu['parentid2'] : "",
@@ -1123,7 +1148,7 @@ $Treejsons = array();
 					"date_of_death"=>"",
 					"place_heaven"=>"",
 					"col_fix"=>$tlu['col_fix'],
-					"has_child"=>0,
+					"has_child"=>$has_child['sum'],
 					"_public_link"=>NV_MY_DOMAIN.$tlu['link']
 				); 
 				if($tlu['relationships'] == 1){
@@ -1131,6 +1156,7 @@ $Treejsons = array();
 				}
 			}
 		}
+		//print_r($Treejsons);die;
 		$Treejsons=json_encode($Treejsons);		
 		$contents = view_all('view_tree', $news_contents, $list_users, $array_keyword, $content_comment, $Treejsons );
 		
@@ -1182,7 +1208,7 @@ $Treejsons = array();
 	$page_title = $news_contents['title'];
 	$key_words = implode( ', ', $key_words );
 	$description = $news_contents['hometext'];
-	echo  $contents ;
+	echo nv_site_theme( $contents );
 }
 else
 {

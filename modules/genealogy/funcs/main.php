@@ -178,7 +178,7 @@ if( empty( $contents ) )
 			$db->sqlreset()
 			->select( 'COUNT(*) ')
 			->from( $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy' )
-			->where( 'status= 1 and districtid = ' . $city_i);
+			->where( 'status= 1 and cityid = ' . $city_i);
 			$num_items = $db->query( $db->sql() )->fetchColumn();
 			$array_fampage[$city_i]['link']=NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $module_info['alias']['location'] . '/' . $rowscity['alias'];
 			$array_fampage[$city_i]['title']=$rowscity['title'];

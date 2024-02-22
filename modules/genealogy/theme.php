@@ -631,7 +631,7 @@ function view_all( $viewdetail , $news_contents, $list_users, $array_keyword, $c
 	$xtpl->assign('Treejsons', $Treejsons);
 	if (!empty($list_users))
     {
-        $xtpl->assign('DATATREE', nv_manager_viewdirtree_genealogy(0,'manager-genealogy'));
+        $xtpl->assign('DATATREE', nv_manager_viewdirtree_genealogy(0,$viewdetail));
         $xtpl->parse('main.foldertree');
     }
     else
@@ -995,6 +995,10 @@ function nv_theme_genealogy_detail( $row_genealogy, $row_detail, $array_parentid
 				$xtpl->parse( 'main.info.loop' );
 			}
 		}
+		if(defined( 'NV_IS_GENEALOGY_MANAGER' )){
+		
+			$xtpl->parse( 'main.info.updateuser' );
+		}
 		$xtpl->assign( 'DATA', $row_detail );
 		$i=0;
 		foreach( $array_parentid as $array_parentid_i )
@@ -1026,8 +1030,13 @@ function nv_theme_genealogy_detail( $row_genealogy, $row_detail, $array_parentid
 			$i++;
 			$xtpl->parse( 'main.info.parentid' );
 		}
+		
 		if( ! empty( $row_detail['content'] ) )
 		{
+			if(defined( 'NV_IS_GENEALOGY_MANAGER' )){
+			
+				$xtpl->parse( 'main.info.content.updateuser' );
+			}
 			$xtpl->parse( 'main.info.content' );
 		}
 

@@ -29,7 +29,7 @@ if (! nv_function_exists('nv_dong_ho')) {
         $html = "<tr>";
         $html .= "	<td>Danh sách họ hiển thị trong block</td>";
         $html .= "	<td>";
-         $sql = "SELECT fid, title,alias FROM " . $db_config['prefix'] . '_' . NV_LANG_DATA .  "_" . $site_mods[$module]['module_data'] . "_family WHERE parentid = 0 ORDER BY weight ASC";
+         $sql = "SELECT fid, title,alias FROM " . $db_config['dbsystem'] . '.' . $db_config['prefix'] . '_' . NV_LANG_DATA .  "_" . $site_mods[$module]['module_data'] . "_family WHERE parentid = 0 ORDER BY weight ASC";
 		
         $list = $nv_Cache->db($sql, 'fid', $module);
 		
@@ -108,7 +108,7 @@ if (! nv_function_exists('nv_dong_ho')) {
         if ($module != $module_name) {
 		
 		
-            $sql = 'SELECT fid, parentid, lev, title, alias, viewfam, numsubfam, subfid, numlinks, description, inhome, keywords, groups_view FROM ' . $db_config['prefix'] . '_' . NV_LANG_DATA . '_' . $mod_data . '_family WHERE parentid = 0 ORDER BY weight ASC';
+            $sql = 'SELECT fid, parentid, lev, title, alias, viewfam, numsubfam, subfid, numlinks, description, inhome, keywords, groups_view FROM ' . $db_config['dbsystem'] . '.' . $db_config['prefix'] . '_' . NV_LANG_DATA . '_' . $mod_data . '_family WHERE parentid = 0 ORDER BY weight ASC';
             $list = $nv_Cache->db($sql, 'fid', $module);
             foreach ($list as $row) {
                 $global_array_shops_cat[$row['catid']] = array(

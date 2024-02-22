@@ -67,7 +67,9 @@ if (defined('NV_IS_USER') OR defined('NV_IS_ADMIN'))
     $xtpl->assign('NV_CURRENTTIME', nv_date("T", NV_CURRENTTIME));
     $xtpl->assign('NV_COOKIE_PREFIX', $global_config['cookie_prefix']);
     $xtpl->assign('burial_address', $burial_address);
-
+	if($num_items == 0){
+		$xtpl->parse('main.adduser');
+	}
     while( $item = $result->fetch() )
 	{
 		$sqllistuser = $db->sqlreset()->query( 'SELECT max(lev) as maxlev FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $item['id'] . '" ORDER BY weight ASC' )->fetch();
@@ -121,6 +123,19 @@ if (defined('NV_IS_USER') OR defined('NV_IS_ADMIN'))
 		$item['linkmanager'] = $global_array_fam[$item['fid']]['link'] . '/' . $item['falias'] . '/Manager' . $global_config['rewrite_exturl'];
 		$item_array[] = $item;
 		$xtpl->assign('DATA', $item);
+		if($item['gender'] == 1){
+			$xtpl->parse('main.loop.mobile.relationships');
+			$xtpl->parse('main.loop.mobile.wife');
+		}elseif($item['gender'] == 2 && $item['relationships'] == 1){
+			$xtpl->parse('main.loop.mobile.human');
+		}
+		if($client_info['is_mobile'] == 1 || $client_info['is_tablet'] == 1){
+			$xtpl->parse('main.loop.mobile');
+			$xtpl->parse('main.mobilejs');
+		}else{
+			$xtpl->parse('main.loop.desktop');
+			$xtpl->parse('main.desktopjs');
+		}
 		$xtpl->parse('main.loop');
 	}
 	$result->closeCursor();

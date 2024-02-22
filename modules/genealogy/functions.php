@@ -9,20 +9,19 @@
  * @Createdate 01/01/2020 00:00
  */
 if( ! defined( 'NV_SYSTEM' ) ) die( 'Stop!!!' );
-$tablelocation = NV_PREFIXLANG . '_' . $module_data;
-$result = $db->query( 'SHOW TABLE STATUS LIKE ' . $db->quote( $tablelocation . '_%' ) );
+$tablelocation = $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data;
+$result = $db->query( 'SHOW TABLE STATUS FROM ' . $db_config['dbsystem'] . ' LIKE ' . $db->quote( NV_PREFIXLANG . '_' . $module_data . '_%' ) );
 $checklocation=0;
 while( $item = $result->fetch( ) )
 {
 	$checklocation++;
 }
-
 if ($checklocation > 0) {
 	
 	define( 'NV_MODULE_LOCATION', true );
 	
 	$sql = 'SELECT provinceid, title, alias, type FROM ' . $tablelocation . '_province WHERE status=1 ORDER BY weight ASC';
-	
+
 	$global_array_location_city = $nv_Cache->db( $sql, 'provinceid', 'genealogy' );
 	
 	$sql = 'SELECT districtid, provinceid, title, alias, type FROM ' . $tablelocation . '_district WHERE status=1 ORDER BY weight ASC';
@@ -70,7 +69,7 @@ if($op == 'main'){
 }
 $array_mod_title = array();
 
-$sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_family ORDER BY sort ASC';
+$sql = 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_family ORDER BY sort ASC';
 $list = $nv_Cache->db( $sql, 'fid', $module_name );
 foreach( $list as $l )
 {
@@ -190,7 +189,7 @@ if( ! empty( $array_op ) and $op == 'main' )
 }
 
 
-$sql = "SELECT fid, title, alias FROM " . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY weight ASC";
+$sql = "SELECT fid, title, alias FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY weight ASC";
 $array_family = $nv_Cache->db( $sql, 'fid', $module_name );
 
 
@@ -215,13 +214,13 @@ function nv_menu_gia_pha( $row_genealogy )
 function nv_fix_genealogy()
 {
 	global $db, $db_config, $lang_module, $lang_global, $module_name, $module_data, $op;
-	$query = "SELECT gid FROM " . NV_PREFIXLANG . "_" . $module_data . "_genealogy ORDER BY weight ASC";
+	$query = "SELECT gid FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy ORDER BY weight ASC";
 	$weight = 0;
 	$result = $db->sql_query( $query );
 	while( $row = $db->sql_fetchrow( $result ) )
 	{
 		$weight++;
-		$sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET weight=" . $weight . " WHERE fid=" . intval( $row['gid'] );
+		$sql = "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy SET weight=" . $weight . " WHERE fid=" . intval( $row['gid'] );
 		$db->sql_query( $sql );
 	}
 	
@@ -230,7 +229,7 @@ function nv_fix_genealogy()
 function nv_fix_genealogy_user( $parentid )
 {
 	global $db, $db_config, $lang_module, $lang_global, $module_name, $module_data, $op;
-	$query = "SELECT id, relationships  FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE parentid=" . $parentid . " ORDER BY weight ASC";
+	$query = "SELECT id, relationships  FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE parentid=" . $parentid . " ORDER BY weight ASC";
 	$weight1 = $weight2 = 0;
 	$result = $db->query( $query );
 	while( $row = $result->fetch() )
@@ -245,7 +244,7 @@ function nv_fix_genealogy_user( $parentid )
 			$weight1++;
 			$weight = $weight1;
 		}
-		$sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . " SET weight=" . $weight . " WHERE id=" . intval( $row['id'] );
+		$sql = "UPDATE " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " SET weight=" . $weight . " WHERE id=" . intval( $row['id'] );
 		$db->query( $sql );
 	}
 	$db->sqlreset();
@@ -257,7 +256,7 @@ function nv_module_gia_pha_sql_phado( $gid, $list_lev )
 	global $db, $module_data;
 	$array_data = array();
 	$a = 0;
-	$query = "SELECT id, parentid, weight, lev, relationships, gender, status, alias, full_name FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $gid . " AND lev IN ( " . implode( ",", $list_lev ) . " ) ORDER BY parentid ASC, weight, id ASC";
+	$query = "SELECT id, parentid, weight, lev, relationships, gender, status, alias, full_name FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . " WHERE gid=" . $gid . " AND lev IN ( " . implode( ",", $list_lev ) . " ) ORDER BY parentid ASC, weight, id ASC";
 	$result = $db->sql_query( $query );
     $parentid = array();
 	while( $row = $db->sql_fetchrow( $result ) )
@@ -553,6 +552,6 @@ function nv_giapha_export_pdf( $contents, $background, $row_genealogy )
 
 
 
-$sql = "SELECT fid, title, alias FROM " . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY weight ASC";
+$sql = "SELECT fid, title, alias FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_family ORDER BY weight ASC";
 $array_family = $nv_Cache->db( $sql, 'fid', $module_name );
 

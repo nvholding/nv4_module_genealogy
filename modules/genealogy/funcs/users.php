@@ -12,6 +12,7 @@ if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
 
 if (defined('NV_IS_USER') OR defined('NV_IS_ADMIN'))
 {
+	
 	define( 'NV_EDITOR', true );
 	define( 'NV_IS_CKEDITOR', true );
 	if( defined( 'NV_EDITOR' ) )
@@ -177,6 +178,7 @@ if (defined('NV_IS_USER') OR defined('NV_IS_ADMIN'))
                 $nv_Cache->delMod($module_name);
 				$alias_family_tree=change_alias($nv_Lang->getModule('family_tree'));
 				$base_url_rewrite=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$post_gid['fid']]['alias'] . '/' . $post_gid['alias'] . '/Manager' . $global_config['rewrite_exturl'], true );
+				//$base_url_rewrite=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=member' . $global_config['rewrite_exturl'], true );
                 echo '<script type="text/javascript">
 					parent.location="' . $base_url_rewrite . '";
     				</script>';
@@ -330,7 +332,7 @@ if (defined('NV_IS_USER') OR defined('NV_IS_ADMIN'))
 
         $xtpl->parse('main.root.relationships');
     }
-    for ($i = 1; $i <= 100; $i++)
+    for ($i = 1; $i <= 200; $i++)
     {
         $arrayName = array('value' => $i, 'title' => $i, 'selected' => ($i == $post['weight']) ? ' selected="selected"' : '');
         $xtpl->assign('WEIGHT', $arrayName);

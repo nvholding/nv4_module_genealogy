@@ -9,7 +9,21 @@
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
+function generateUniqueFileName($uploadDir, $fileName) {
+	$fullPath = $uploadDir . $fileName;
+	$info = pathinfo($fullPath);
+	$baseName = $info['filename'];
+	$extension = $info['extension'];
+	$counter = 1;
 
+	while (file_exists($fullPath)) {
+		$newFileName = $baseName . '_' . $counter . '.' . $extension;
+		$fullPath = $uploadDir . $newFileName;
+		$counter++;
+	}
+
+	return $fullPath;
+}
 
 $contents = '';
 $publtime = 0;
@@ -88,6 +102,7 @@ else
 		$news_contents['cityid'] = $nv_Request->get_int('provinceid', 'post', 0);
 		$news_contents['districtid'] = $nv_Request->get_int('districtid', 'post', 0);
 		$news_contents['wardid'] = $nv_Request->get_int('wardid', 'post', 0);
+		$news_contents['who_view'] = $nv_Request->get_int('who_view', 'post', 0);
 		$news_contents['bodytext'] = $nv_Request->get_string('bodytext', 'post', '');
 		$news_contents['bodytext'] = defined('NV_EDITOR') ? nv_nl2br($news_contents['bodytext'], '') : nv_nl2br(nv_htmlspecialchars(strip_tags($news_contents['bodytext'])), '<br />');
 		$news_contents['bodyhtml'] = $news_contents['bodytext'];
@@ -143,6 +158,48 @@ else
 		}else{
 			$news_contents['admin_id']= $user_info['userid'];
 		}
+		$uploadDir = NV_UPLOADS_DIR . '/' . $module_upload . '/' . $user_info['username'] . '/' . $news_contents['id'];
+
+		// Bạn cũng có thể thay đổi tên file nếu file đã tồn tại
+		$imgbanner = $nv_Request->get_title('imgbanner', 'post', '');
+		
+		
+		// Loại bỏ các ký tự lạ và mã hóa dữ liệu ảnh
+		$filteredData = str_replace('data:image/png;base64,', '', $data);
+		$filteredData = str_replace(' ', '+', $filteredData);
+		$decodedData = base64_decode($filteredData);
+		$row['image_data'] = $filteredData;
+		// Lưu trữ ảnh dưới định dạng png vào server
+		$fileName = $user_info['username'] . "_" . $user_info['userid'] . "_" . $news_contents['fid'] . "_" . date('YmdHis') . ".png";
+		$news_contents['homeimgfile'] = $fileName;
+
+		/* // Xử lý upload
+		if ($_FILES['imgbanner']['error'] == UPLOAD_ERR_OK) {
+			$imgbanner = basename($_FILES['imgbanner']['name']);
+			$targetimgbannerPath = generateUniqueFileName($uploadDir, $imgbanner);
+
+			if (move_uploaded_file($_FILES['imgbanner']['tmp_name'], $targetimgbannerPath)) {
+				$news_contents['homeimgfile'] = $imgbanner;
+			} else {
+				$error[] =  'Có lỗi khi lưu hình ảnh banner.';
+			}
+		} else {
+			$error[] =   'Có lỗi khi upload hình ảnh banner.';
+		} */
+		//print_r($_FILES['imgbackground']);
+		/* if ($_FILES['imgbackground']['error'] == UPLOAD_ERR_OK) {
+			$imgbackground = basename($_FILES['imgbackground']['name']);
+			print_r($_FILES['imgbackground']);
+			$targetFilePath = generateUniqueFileName($uploadDir, $imgbackground);
+
+			if (move_uploaded_file($_FILES['imgbackground']['tmp_name'], $targetFilePath)) {
+				$news_contents['homeimgbg'] = $imgbackground;
+			} else {
+				$error[] =  'Có lỗi khi lưu hình nền.';
+			}
+		} else {
+			$error[] =   'Có lỗi khi upload hình nền.';
+		} */
 		if (empty($error)){
 			if (empty($news_contents['id']) and $news_contents['cityid'] > 0 and empty($error))
 			{
@@ -172,7 +229,7 @@ else
 				}
 				$news_contents['hometext'] = $nv_Request->get_textarea( 'hometext', '', 'br', 1 );
 
-				$news_contents['homeimgfile'] = $nv_Request->get_title( 'homeimg', 'post', '' );
+				//$news_contents['homeimgfile'] = $nv_Request->get_title( 'homeimg', 'post', '' );
 				$news_contents['homeimgalt'] = $nv_Request->get_title( 'homeimgalt', 'post', '', 1 );
 				$news_contents['imgposition'] = $nv_Request->get_int( 'imgposition', 'post', 0 );
 				if( ! array_key_exists( $news_contents['imgposition'], $array_imgposition ) )
@@ -196,7 +253,7 @@ else
 				$news_contents['edittime'] = NV_CURRENTTIME;
 				
 				$sql = 'INSERT INTO ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_genealogy
-					(fid, listfid, admin_id, author, patriarch, addtime, edittime, status, publtime, exptime, archive, title, alias, hometext, homeimgfile, homeimgalt, homeimgthumb, inhome, allowed_comm, allowed_rating, hitstotal, hitscm, total_rating, click_rating, cityid, districtid, wardid, years, full_name, telephone, email) VALUES
+					(fid, listfid, admin_id, author, patriarch, addtime, edittime, status, publtime, exptime, archive, title, alias, hometext, homeimgfile, homeimgbg, homeimgalt, homeimgthumb, inhome, allowed_comm, allowed_rating, hitstotal, hitscm, total_rating, click_rating, cityid, districtid, wardid, years, full_name, telephone, email) VALUES
 					 (' . intval( $news_contents['fid'] ) . ',
 					 :listfid,
 					 ' . intval( $news_contents['admin_id'] ) . ',
@@ -212,6 +269,7 @@ else
 					 :alias,
 					 :hometext,
 					 :homeimgfile,
+					 :homeimgbg,
 					 :homeimgalt,
 					 :homeimgthumb,
 					 ' . intval( $news_contents['inhome'] ) . ',
@@ -227,7 +285,8 @@ else
 					 :years,
 					 :full_name,
 					 :telephone,
-					 :email
+					 :email,
+					 ' . intval( $news_contents['who_view'] ) . ',
 					 
 					 )';
 
@@ -239,6 +298,7 @@ else
 				$data_insert['alias'] = $news_contents['alias'];
 				$data_insert['hometext'] = $news_contents['hometext'];
 				$data_insert['homeimgfile'] = $news_contents['homeimgfile'];
+				$data_insert['homeimgbg'] = $news_contents['homeimgbg'];
 				$data_insert['homeimgalt'] = $news_contents['homeimgalt'];
 				$data_insert['homeimgthumb'] = $news_contents['homeimgthumb'];
 				$data_insert['allowed_comm'] = $news_contents['allowed_comm'];
@@ -465,10 +525,10 @@ else
 
 		
 		
-		$base_url_rewrite = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . '/Manager' . $global_config['rewrite_exturl'], true );
 		
 	}
-
+	$base_url_rewrite = nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . '/Manager' . $global_config['rewrite_exturl'], true );
+		
 
 	$array_mod_title[] = array(
 			'title' => $nv_Lang->getModule('manager'),

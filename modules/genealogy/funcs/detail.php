@@ -9,11 +9,7 @@
  */
 
 if( ! defined( 'NV_IS_MOD_GENEALOGY' ) ) die( 'Stop!!!' );
-if( defined( 'NV_IS_ADMIN' )){
-	define( 'NV_IS_GENEALOGY_MANAGER', true);
-}elseif($user_info['userid'] == $news_contents['admin_id']){
-	define( 'NV_IS_GENEALOGY_MANAGER', true);
-}
+
 
 $contents = '';
 $publtime = 0;
@@ -33,6 +29,11 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 	$query = $db->query( 'SELECT * FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_' . $module_data . '_' . $fid . ' WHERE alias = "' . $alias_url.'"' );
 	
 	$news_contents = $query->fetch();
+	if( defined( 'NV_IS_ADMIN' )){
+		define( 'NV_IS_GENEALOGY_MANAGER', true);
+	}elseif($user_info['userid'] == $news_contents['admin_id']){
+		define( 'NV_IS_GENEALOGY_MANAGER', true);
+	}
 	if( $news_contents['id'] > 0 AND empty($array_op[2]) )
 	{
 		$sqllistuser = $db->sqlreset()->query( 'SELECT max(lev) as maxlev FROM ' . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . '_'. $module_data .' WHERE gid = "' . $news_contents['id'] . '" ORDER BY weight ASC' )->fetch();
@@ -41,11 +42,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 
 		if( defined( 'NV_IS_MODADMIN' ) or ( $news_contents['status'] == 1 and $news_contents['publtime'] < NV_CURRENTTIME and ( $news_contents['exptime'] == 0 or $news_contents['exptime'] > NV_CURRENTTIME ) ) )
 		{
-			if( defined( 'NV_IS_ADMIN' )){
-				define( 'NV_IS_GENEALOGY_MANAGER', true);
-			}elseif($user_info['userid'] == $news_contents['admin_id']){
-				define( 'NV_IS_GENEALOGY_MANAGER', true);
-			}
+			
 			$time_set = $nv_Request->get_int( $module_data . '_' . $op . '_' . $news_contents['id'], 'session' );
 			if( empty( $time_set ) )
 			{
@@ -720,11 +717,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 		}
 		//die("SELECT * FROM " . $db_config['dbsystem'] . '.' . NV_PREFIXLANG . "_" . $module_data . "_genealogy WHERE id=" . $list_genealogy['admin_id']);
 		
-		if( defined( 'NV_IS_ADMIN' )){
-				define( 'NV_IS_GENEALOGY_MANAGER', true);
-		}elseif($user_info['userid'] == $list_genealogy['admin_id']){
-			define( 'NV_IS_GENEALOGY_MANAGER', true);
-		}
+		
 
 	}
 	
@@ -826,6 +819,7 @@ if( nv_user_in_groups( $global_array_fam[$fid]['groups_view'] ) )
 	$news_contents['link_convention']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_convention . $global_config['rewrite_exturl'], true );
 	$news_contents['link_collapse']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_collapse . $global_config['rewrite_exturl'], true );
 	$news_contents['link_anniversary']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_anniversary . $global_config['rewrite_exturl'], true );
+	$news_contents['link_member']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=member' . $global_config['rewrite_exturl'], true );
 	$news_contents['link_family_tree']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] .'/' . $alias_family_tree . $global_config['rewrite_exturl'], true );
 	$news_contents['link_main']=nv_url_rewrite( NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_fam[$news_contents['fid']]['alias'] . '/' . $news_contents['alias'] . $global_config['rewrite_exturl'], true );
 	$news_contents['ftitle']=$global_array_fam[$fid]['title'];
